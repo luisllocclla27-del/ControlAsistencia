@@ -936,3 +936,38 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.14);
 }
+
+
+/* ===== Login & Kiosk ===== */
+.auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--bg-base); padding: 20px; }
+.auth-card { width: 100%; max-width: 420px; padding: 40px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); text-align: center; }
+.auth-icon { width: 64px; height: 64px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: var(--shadow-glow); }
+.auth-icon svg { width: 32px; height: 32px; color: white; }
+.auth-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.auth-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+.auth-form { text-align: left; }
+.auth-hint { margin-top: 24px; padding: 16px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-muted); text-align: left; }
+.kiosk-header { background: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+.kiosk-brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.1rem; }
+.kiosk-brand-icon { width: 40px; height: 40px; background: var(--accent); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; }
+.kiosk-user { display: flex; align-items: center; gap: 16px; color: var(--text-secondary); font-size: 0.9rem; }
+.kiosk-user strong { color: var(--text-primary); }
+.kiosk-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.kiosk-clock { text-align: center; margin-bottom: 60px; }
+.kiosk-time { font-size: 6rem; font-weight: 300; letter-spacing: -0.05em; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; margin-bottom: 12px; }
+.kiosk-date { font-size: 1.25rem; color: var(--text-secondary); }
+.kiosk-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; max-width: 600px; }
+.kiosk-btn { background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-xl); padding: 40px 20px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: all var(--transition-base); }
+.kiosk-btn:hover { background: var(--bg-elevated); transform: translateY(-4px); }
+.kiosk-btn.entrada:hover { border-color: var(--success); box-shadow: 0 12px 40px var(--success-bg); }
+.kiosk-btn.salida:hover { border-color: var(--warning); box-shadow: 0 12px 40px var(--warning-bg); }
+.kiosk-btn-icon { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: transform var(--transition-base); }
+.kiosk-btn:hover .kiosk-btn-icon { transform: scale(1.1); }
+.kiosk-btn.entrada .kiosk-btn-icon { background: var(--success-bg); color: var(--success); }
+.kiosk-btn.salida .kiosk-btn-icon { background: var(--warning-bg); color: var(--warning); }
+.kiosk-btn h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
+.kiosk-btn.entrada h3 { color: var(--success); }
+.kiosk-btn.salida h3 { color: var(--warning); }
+.kiosk-btn p { color: var(--text-muted); font-size: 0.9rem; }
+.kiosk-status { margin-top: 40px; padding: 16px 24px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 1.05rem; animation: toast-in var(--transition-base); }
+
