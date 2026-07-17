@@ -1,4 +1,5 @@
-import { createSupabaseClient } from './supabase';
+import { createSupabaseClient, hasSupabaseCredentials } from './supabase';
+import { generateLocalId, loadLocalDatabase, saveLocalDatabase } from './local-db';
 
 export interface EmployeeInput {
   employeeCode: string;
@@ -12,6 +13,17 @@ export interface EmployeeRecord extends EmployeeInput {
 }
 
 export async function listEmployees(): Promise<EmployeeRecord[]> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    return database.employees.map((item) => ({
+      id: item.id,
+      employeeCode: item.employeeCode,
+      fullName: item.fullName,
+      email: item.email,
+      active: item.active
+    }));
+  }
+
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from('employees').select('id, employee_code, full_name, email, active').order('created_at', { ascending: false });
 
@@ -29,6 +41,22 @@ export async function listEmployees(): Promise<EmployeeRecord[]> {
 }
 
 export async function createEmployee(input: EmployeeInput): Promise<EmployeeRecord> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    const record: EmployeeRecord = {
+      id: generateLocalId('emp'),
+      employeeCode: input.employeeCode,
+      fullName: input.fullName,
+      email: input.email,
+      active: true
+    };
+
+    database.employees.unshift(record);
+    await saveLocalDatabase(database);
+
+    return record;
+  }
+
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from('employees')

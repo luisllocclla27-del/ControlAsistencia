@@ -1,4 +1,5 @@
-import { createSupabaseClient } from './supabase';
+import { createSupabaseClient, hasSupabaseCredentials } from './supabase';
+import { generateLocalId, loadLocalDatabase, saveLocalDatabase } from './local-db';
 import { buildAttendanceSummary, type AttendanceRecord, type AttendanceSummary } from './report';
 
 export interface AttendanceEntryInput {
@@ -23,6 +24,18 @@ export interface AttendanceEntryRecord {
 }
 
 export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    return buildAttendanceSummary(
+      database.attendanceRecords.map((item) => ({
+        employeeId: item.employeeId,
+        workDate: item.workDate,
+        tardinessMinutes: item.tardinessMinutes,
+        clockIn: item.clockIn
+      }))
+    );
+  }
+
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
@@ -39,6 +52,20 @@ export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
 }
 
 export async function listAttendanceRecords(): Promise<AttendanceEntryRecord[]> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    return database.attendanceRecords.map((item) => ({
+      id: item.id,
+      employeeId: item.employeeId,
+      workDate: item.workDate,
+      scheduledStart: item.scheduledStart,
+      clockIn: item.clockIn,
+      clockOut: item.clockOut,
+      tardinessMinutes: item.tardinessMinutes,
+      notes: item.notes
+    }));
+  }
+
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from('attendance_records')
@@ -62,6 +89,35 @@ export async function listAttendanceRecords(): Promise<AttendanceEntryRecord[]> 
 }
 
 export async function createAttendanceRecord(input: AttendanceEntryInput): Promise<AttendanceEntryRecord> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    const record: AttendanceEntryRecord = {
+      id: generateLocalId('att'),
+      employeeId: input.employeeId,
+      workDate: input.workDate,
+      scheduledStart: input.scheduledStart,
+      clockIn: input.clockIn,
+      clockOut: input.clockOut ?? null,
+      tardinessMinutes: Math.max(0, timeToMinutes(input.clockIn) - timeToMinutes(input.scheduledStart)),
+      notes: input.notes ?? null
+    };
+
+    database.attendanceRecords.unshift({
+      id: record.id,
+      employeeId: record.employeeId,
+      workDate: record.workDate,
+      scheduledStart: record.scheduledStart,
+      clockIn: record.clockIn,
+      clockOut: record.clockOut,
+      tardinessMinutes: record.tardinessMinutes,
+      notes: record.notes,
+      shiftId: input.shiftId ?? null
+    });
+
+    await saveLocalDatabase(database);
+    return record;
+  }
+
   const supabase = createSupabaseClient();
   const tardinessMinutes = Math.max(0, timeToMinutes(input.clockIn) - timeToMinutes(input.scheduledStart));
 

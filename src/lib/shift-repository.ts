@@ -1,4 +1,5 @@
-import { createSupabaseClient } from './supabase';
+import { createSupabaseClient, hasSupabaseCredentials } from './supabase';
+import { generateLocalId, loadLocalDatabase, saveLocalDatabase } from './local-db';
 
 export interface ShiftInput {
   name: string;
@@ -12,6 +13,17 @@ export interface ShiftRecord extends ShiftInput {
 }
 
 export async function listShifts(): Promise<ShiftRecord[]> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    return database.shifts.map((item) => ({
+      id: item.id,
+      name: item.name,
+      startTime: item.startTime,
+      endTime: item.endTime,
+      toleranceMinutes: item.toleranceMinutes
+    }));
+  }
+
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from('shifts').select('id, name, start_time, end_time, tolerance_minutes').order('created_at', { ascending: false });
 
@@ -29,6 +41,22 @@ export async function listShifts(): Promise<ShiftRecord[]> {
 }
 
 export async function createShift(input: ShiftInput): Promise<ShiftRecord> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    const record: ShiftRecord = {
+      id: generateLocalId('shift'),
+      name: input.name,
+      startTime: input.startTime,
+      endTime: input.endTime,
+      toleranceMinutes: input.toleranceMinutes
+    };
+
+    database.shifts.unshift(record);
+    await saveLocalDatabase(database);
+
+    return record;
+  }
+
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from('shifts')

@@ -1,187 +1,133 @@
-import { buildAttendanceSummary } from '@/lib/report';
 import { EmployeeForm } from '@/components/employee-form';
-import { ReportSummary } from '@/components/report-summary';
 import { AttendanceForm } from '@/components/attendance-form';
 import { ShiftForm } from '@/components/shift-form';
 import { RoleForm } from '@/components/role-form';
+import { ReportSummary } from '@/components/report-summary';
 import { ResourceList } from '@/components/resource-list';
+import { fetchAttendanceSummary, listAttendanceRecords } from '@/lib/attendance-repository';
+import { listEmployees } from '@/lib/employee-repository';
+import { listRoles } from '@/lib/role-repository';
+import { listShifts } from '@/lib/shift-repository';
 
-const metrics = [
-  { value: '4', label: 'sprints planificados' },
-  { value: '6', label: 'modulos iniciales' },
-  { value: '1', label: 'base de datos central' },
-  { value: '2', label: 'tipos de pruebas' }
-];
+export const dynamic = 'force-dynamic';
 
-const milestones = [
-  'Analisis del problema y requisitos',
-  'Diseno de base de datos y trazabilidad',
-  'Implementacion del MVP',
-  'Pruebas y despliegue'
-];
+export default async function HomePage() {
+  const [employees, shifts, roles, attendanceRecords, attendanceSummary] = await Promise.all([
+    listEmployees(),
+    listShifts(),
+    listRoles(),
+    listAttendanceRecords(),
+    fetchAttendanceSummary()
+  ]);
 
-const modules = [
-  'Administracion de empleados',
-  'Gestion de turnos',
-  'Registro de asistencia',
-  'Calculo de tardanzas',
-  'Reportes basicos',
-  'Autenticacion y roles'
-];
+  const stats = [
+    { value: employees.length, label: 'empleados registrados' },
+    { value: shifts.length, label: 'turnos configurados' },
+    { value: attendanceRecords.length, label: 'asistencias cargadas' },
+    { value: attendanceSummary.lateRecords, label: 'tardanzas detectadas' }
+  ];
 
-const sampleSummary = buildAttendanceSummary([
-  { employeeId: 'EMP-001', workDate: '2026-07-15', tardinessMinutes: 0, clockIn: '08:00' },
-  { employeeId: 'EMP-002', workDate: '2026-07-15', tardinessMinutes: 9, clockIn: '08:09' },
-  { employeeId: 'EMP-003', workDate: '2026-07-15', tardinessMinutes: 0, clockIn: '07:58' }
-]);
-
-export default function HomePage() {
   return (
     <main className="page-shell">
       <section className="hero-card">
-        <div className="eyebrow">Proyecto final de calidad de software</div>
-        <h1>Sistema de control de asistencia y retardos para empleados</h1>
+        <div className="eyebrow">Panel operativo</div>
+        <h1>Control de asistencia y retardos</h1>
         <p className="hero-copy">
-          Una aplicacion web con base de datos, documentacion en Markdown, pruebas automatizadas y despliegue en Vercel para demostrar SDD y Scrum de forma completa.
+          Registra empleados, turnos, asistencia y roles. Las listas se cargan desde la base de datos o desde el respaldo local para que la demo funcione siempre.
         </p>
 
         <div className="metric-grid">
-          {metrics.map((metric) => (
-            <article key={metric.label} className="metric-card">
-              <strong>{metric.value}</strong>
-              <span>{metric.label}</span>
+          {stats.map((stat) => (
+            <article key={stat.label} className="metric-card">
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="content-grid">
+      <section className="content-grid" style={{ marginTop: '18px' }}>
         <article className="panel">
-          <h2>Alcance inicial</h2>
+          <h2>Resumen actual</h2>
           <ul>
-            <li>Registro de empleados y turnos.</li>
-            <li>Captura de entradas, salidas y tardanzas.</li>
-            <li>Consultas por empleado y reportes basicos.</li>
-            <li>Persistencia en Supabase PostgreSQL.</li>
+            <li>Registros totales: {attendanceSummary.totalRecords}</li>
+            <li>Registros puntuales: {attendanceSummary.onTimeRecords}</li>
+            <li>Registros tardios: {attendanceSummary.lateRecords}</li>
+            <li>Minutos acumulados de tardanza: {attendanceSummary.totalTardinessMinutes}</li>
           </ul>
         </article>
 
         <article className="panel accent">
-          <h2>Hitos del desarrollo</h2>
+          <h2>Uso rapido</h2>
           <ol>
-            {milestones.map((milestone) => (
-              <li key={milestone}>{milestone}</li>
-            ))}
+            <li>Registra empleados y turnos.</li>
+            <li>Captura la asistencia diaria.</li>
+            <li>Consulta los listados y filtros.</li>
+            <li>Revisa el resumen de reportes.</li>
           </ol>
         </article>
       </section>
 
-      <section className="panel" style={{ marginTop: '18px' }}>
-        <h2>Modulos del MVP</h2>
-        <ul>
-          {modules.map((module) => (
-            <li key={module}>{module}</li>
-          ))}
-        </ul>
+      <section className="content-grid" style={{ marginTop: '18px' }}>
+        <article className="panel">
+          <h2>Registrar empleado</h2>
+          <EmployeeForm />
+        </article>
+
+        <article className="panel">
+          <h2>Registrar asistencia</h2>
+          <AttendanceForm />
+        </article>
       </section>
 
       <section className="content-grid" style={{ marginTop: '18px' }}>
         <article className="panel">
-          <h2>Resumen de asistencia de ejemplo</h2>
-          <ul>
-            <li>Registros totales: {sampleSummary.totalRecords}</li>
-            <li>Registros tardios: {sampleSummary.lateRecords}</li>
-            <li>Registros puntuales: {sampleSummary.onTimeRecords}</li>
-            <li>Minutos totales de tardanza: {sampleSummary.totalTardinessMinutes}</li>
-          </ul>
+          <h2>Crear turno</h2>
+          <ShiftForm />
         </article>
 
-        <article className="panel accent">
-          <h2>Evidencia academica</h2>
-          <ul>
-            <li>Documentacion en Markdown por seccion.</li>
-            <li>Base de datos disenada desde requisitos.</li>
-            <li>Pruebas unitarias e integracion planificadas.</li>
-            <li>Despliegue en Vercel con Supabase.</li>
-          </ul>
+        <article className="panel">
+          <h2>Crear rol</h2>
+          <RoleForm />
         </article>
       </section>
 
       <section className="panel" style={{ marginTop: '18px' }}>
-        <h2>Registro rapido de empleados</h2>
-        <p className="hero-copy" style={{ marginTop: '8px' }}>
-          Este formulario conecta con la ruta <code>/api/employees</code> para preparar el flujo de registro del MVP.
-        </p>
-        <EmployeeForm />
+        <ReportSummary />
       </section>
-
-      <section className="panel" style={{ marginTop: '18px' }}>
-        <h2>Registro de asistencia</h2>
-        <p className="hero-copy" style={{ marginTop: '8px' }}>
-          Este formulario conecta con la ruta <code>/api/attendance</code> y calcula la tardanza segun la hora programada.
-        </p>
-        <AttendanceForm />
-      </section>
-
-      <section className="panel" style={{ marginTop: '18px' }}>
-        <h2>Gestion de turnos</h2>
-        <p className="hero-copy" style={{ marginTop: '8px' }}>
-          Este formulario conecta con la ruta <code>/api/shifts</code> para definir horarios y tolerancias.
-        </p>
-        <ShiftForm />
-      </section>
-
-      <section className="panel" style={{ marginTop: '18px' }}>
-        <h2>Gestion de roles</h2>
-        <p className="hero-copy" style={{ marginTop: '8px' }}>
-          Este formulario conecta con la ruta <code>/api/roles</code> para organizar el acceso al sistema.
-        </p>
-        <RoleForm />
-      </section>
-
-      <ReportSummary />
 
       <section className="content-grid" style={{ marginTop: '18px' }}>
         <ResourceList
-          title="Empleados registrados"
-          description="Consulta rapida de los empleados guardados en la base de datos."
+          title="Empleados"
+          description="Listado con filtro de los empleados guardados."
           endpoint="/api/employees"
-          renderItem={(item) => (
-            <>
-              <strong>{String(item.fullName ?? 'Sin nombre')}</strong> - {String(item.employeeCode ?? 'sin codigo')}
-            </>
-          )}
+          primaryField="fullName"
+          secondaryFields={['employeeCode', 'email']}
         />
 
         <ResourceList
-          title="Turnos definidos"
-          description="Horarios disponibles para asociar asistencia y calcular tardanzas."
+          title="Turnos"
+          description="Horarios disponibles para calcular asistencia."
           endpoint="/api/shifts"
-          renderItem={(item) => (
-            <>
-              <strong>{String(item.name ?? 'Sin nombre')}</strong> - {String(item.startTime ?? '--:--')} a {String(item.endTime ?? '--:--')}
-            </>
-          )}
+          primaryField="name"
+          secondaryFields={['startTime', 'endTime', 'toleranceMinutes']}
         />
       </section>
 
       <section className="content-grid" style={{ marginTop: '18px' }}>
         <ResourceList
-          title="Asistencias registradas"
-          description="Registros historicos de entrada, salida y tardanza."
+          title="Asistencias"
+          description="Registros historicos de entrada y tardanza."
           endpoint="/api/attendance"
-          renderItem={(item) => (
-            <>
-              <strong>{String(item.workDate ?? 'sin fecha')}</strong> - {String(item.clockIn ?? '--:--')} / tardanza {String(item.tardinessMinutes ?? 0)} min
-            </>
-          )}
+          primaryField="workDate"
+          secondaryFields={['clockIn', 'clockOut', 'tardinessMinutes']}
         />
 
         <ResourceList
-          title="Roles creados"
-          description="Permite verificar la estructura de acceso del sistema."
+          title="Roles"
+          description="Roles disponibles para acceso al sistema."
           endpoint="/api/roles"
-          renderItem={(item) => <strong>{String(item.name ?? 'Sin nombre')}</strong>}
+          primaryField="name"
         />
       </section>
     </main>

@@ -1,4 +1,5 @@
-import { createSupabaseClient } from './supabase';
+import { createSupabaseClient, hasSupabaseCredentials } from './supabase';
+import { generateLocalId, loadLocalDatabase, saveLocalDatabase } from './local-db';
 
 export interface RoleInput {
   name: string;
@@ -9,6 +10,14 @@ export interface RoleRecord extends RoleInput {
 }
 
 export async function listRoles(): Promise<RoleRecord[]> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    return database.roles.map((item) => ({
+      id: item.id,
+      name: item.name
+    }));
+  }
+
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from('roles').select('id, name').order('created_at', { ascending: false });
 
@@ -23,6 +32,19 @@ export async function listRoles(): Promise<RoleRecord[]> {
 }
 
 export async function createRole(input: RoleInput): Promise<RoleRecord> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    const record: RoleRecord = {
+      id: generateLocalId('role'),
+      name: input.name
+    };
+
+    database.roles.unshift(record);
+    await saveLocalDatabase(database);
+
+    return record;
+  }
+
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from('roles').insert({ name: input.name }).select('id, name').single();
 
