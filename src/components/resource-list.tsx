@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from 'react';
 
-type RenderItem = (item: Record<string, unknown>) => React.ReactNode;
-
 interface ResourceListProps {
   title: string;
   description: string;
   endpoint: string;
-  renderItem: RenderItem;
+  primaryField: string;
+  secondaryFields?: string[];
 }
 
-export function ResourceList({ title, description, endpoint, renderItem }: ResourceListProps) {
+export function ResourceList({ title, description, endpoint, primaryField, secondaryFields = [] }: ResourceListProps) {
   const [items, setItems] = useState<Record<string, unknown>[]>([]);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('Cargando...');
@@ -74,7 +73,19 @@ export function ResourceList({ title, description, endpoint, renderItem }: Resou
       {!status && items.length > 0 && filteredItems.length === 0 ? (
         <p className="hero-copy">No hay coincidencias para ese filtro.</p>
       ) : null}
-      {filteredItems.length > 0 ? <ul>{filteredItems.map((item, index) => <li key={String(item.id ?? index)}>{renderItem(item)}</li>)}</ul> : null}
+      {filteredItems.length > 0 ? (
+        <ul>
+          {filteredItems.map((item, index) => {
+            const values = [primaryField, ...secondaryFields]
+              .map((field) => String(item[field] ?? ''))
+              .filter((value) => value.length > 0);
+
+            return (
+              <li key={String(item.id ?? index)}>{values.join(' - ')}</li>
+            );
+          })}
+        </ul>
+      ) : null}
     </section>
   );
 }
