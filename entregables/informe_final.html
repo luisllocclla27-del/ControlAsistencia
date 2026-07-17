@@ -242,6 +242,23 @@ Resultado esperado: el sistema muestra un resumen de asistencia por rango de fec
 <li>Las rutas API deben aceptar datos validos y rechazar campos incompletos.</li>
 <li>El reporte debe conservar la consistencia entre totales, tardanzas y puntualidad.</li>
 </ul>
+<h2>Evidencia de Ejecución (Captura)</h2>
+<p>A continuación, se presenta la captura de la ejecución real de la suite de pruebas unitarias y de integración utilizando <strong>Vitest</strong>, demostrando que el 100% de los casos (10/10) se ejecutaron con éxito.</p>
+<pre><code class="language-bash">&gt; proyecto-asistencia-empleados@0.1.0 test
+&gt; vitest run
+
+ RUN  v3.2.7 C:/Users/luisg/OneDrive/Documentos/Proyecto final calidad de software/proyecto-asistencia-empleados
+
+ ✓ tests/attendance.test.ts (6 tests) 11ms
+ ✓ tests/report.test.ts (2 tests) 12ms
+ ✓ tests/api-integration.test.ts (2 tests) 76ms
+
+ Test Files  3 passed (3)
+      Tests  10 passed (10)
+   Start at  21:30:42
+   Duration  3.49s (transform 317ms, setup 0ms, collect 717ms, tests 99ms, environment 6.18s, prepare 939ms)
+</code></pre>
+<p>Como se observa, se evaluaron correctamente los componentes de asistencia, reportes y la integración nativa de la API sin fallos detectados.</p>
 <!-- Page Break -->
 <div style="page-break-before: always;"></div><h1>Despliegue de la aplicacion</h1>
 <h2>Estrategia propuesta</h2>
@@ -297,6 +314,14 @@ Resultado esperado: el sistema muestra un resumen de asistencia por rango de fec
 <li>Componentes de interfaz conectados a rutas API.</li>
 <li>Documentacion de despliegue y flujo de publicacion.</li>
 </ul>
+<h2>Capturas de la Interfaz (UI)</h2>
+<p>A continuación, se presentan las capturas del resultado visual del rediseño del sistema:</p>
+<h3>1. Panel de Control (Dashboard)</h3>
+<p>El dashboard principal presenta las métricas del sistema y un resumen visual del estado de las tardanzas.</p>
+<p><img src="assets/dashboard.png" alt="Dashboard de Control"></p>
+<h3>2. Gestión de Empleados y Registros</h3>
+<p>Las listas utilizan un componente de tablas avanzado con filtros, contadores dinámicos y &quot;badges&quot; de colores para distinguir estados (Ej. Puntual vs Tardanza).</p>
+<p><img src="assets/lista_empleados.png" alt="Lista de Empleados"></p>
 <!-- Page Break -->
 <div style="page-break-before: always;"></div><h1>Conclusiones y recomendaciones</h1>
 <h2>Conclusiones</h2>

@@ -304,6 +304,28 @@ Resultado esperado: el sistema muestra un resumen de asistencia por rango de fec
 - Las rutas API deben aceptar datos validos y rechazar campos incompletos.
 - El reporte debe conservar la consistencia entre totales, tardanzas y puntualidad.
 
+## Evidencia de Ejecución (Captura)
+
+A continuación, se presenta la captura de la ejecución real de la suite de pruebas unitarias y de integración utilizando **Vitest**, demostrando que el 100% de los casos (10/10) se ejecutaron con éxito.
+
+```bash
+> proyecto-asistencia-empleados@0.1.0 test
+> vitest run
+
+ RUN  v3.2.7 C:/Users/luisg/OneDrive/Documentos/Proyecto final calidad de software/proyecto-asistencia-empleados
+
+ ✓ tests/attendance.test.ts (6 tests) 11ms
+ ✓ tests/report.test.ts (2 tests) 12ms
+ ✓ tests/api-integration.test.ts (2 tests) 76ms
+
+ Test Files  3 passed (3)
+      Tests  10 passed (10)
+   Start at  21:30:42
+   Duration  3.49s (transform 317ms, setup 0ms, collect 717ms, tests 99ms, environment 6.18s, prepare 939ms)
+```
+
+Como se observa, se evaluaron correctamente los componentes de asistencia, reportes y la integración nativa de la API sin fallos detectados.
+
 
 <!-- Page Break -->
 <div style="page-break-before: always;"></div>
@@ -366,6 +388,20 @@ Resultado esperado: el sistema muestra un resumen de asistencia por rango de fec
 - Pruebas unitarias para casos normales y bordes.
 - Componentes de interfaz conectados a rutas API.
 - Documentacion de despliegue y flujo de publicacion.
+
+## Capturas de la Interfaz (UI)
+
+A continuación, se presentan las capturas del resultado visual del rediseño del sistema:
+
+### 1. Panel de Control (Dashboard)
+El dashboard principal presenta las métricas del sistema y un resumen visual del estado de las tardanzas.
+
+![Dashboard de Control](assets/dashboard.png)
+
+### 2. Gestión de Empleados y Registros
+Las listas utilizan un componente de tablas avanzado con filtros, contadores dinámicos y "badges" de colores para distinguir estados (Ej. Puntual vs Tardanza).
+
+![Lista de Empleados](assets/lista_empleados.png)
 
 
 <!-- Page Break -->

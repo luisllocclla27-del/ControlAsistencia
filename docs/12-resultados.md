@@ -28,3 +28,17 @@
 - Pruebas unitarias para casos normales y bordes.
 - Componentes de interfaz conectados a rutas API.
 - Documentacion de despliegue y flujo de publicacion.
+
+## Capturas de la Interfaz (UI)
+
+A continuación, se presentan las capturas del resultado visual del rediseño del sistema:
+
+### 1. Panel de Control (Dashboard)
+El dashboard principal presenta las métricas del sistema y un resumen visual del estado de las tardanzas.
+
+![Dashboard de Control](assets/dashboard.png)
+
+### 2. Gestión de Empleados y Registros
+Las listas utilizan un componente de tablas avanzado con filtros, contadores dinámicos y "badges" de colores para distinguir estados (Ej. Puntual vs Tardanza).
+
+![Lista de Empleados](assets/lista_empleados.png)

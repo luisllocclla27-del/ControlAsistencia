@@ -56,6 +56,6 @@ describe('Integration Tests - Employees API', () => {
     expect(response.status).toBe(201);
     
     const result = await response.json();
-    expect(result).toHaveProperty('success', true);
+    expect(result).toHaveProperty('employeeCode', 'JD-999');
   });
 });
