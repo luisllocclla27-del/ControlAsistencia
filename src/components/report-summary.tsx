@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ResourceList } from './resource-list';
 
 /* SVG Icons */
 const ClipboardIcon = () => (
@@ -47,6 +48,7 @@ export function ReportSummary() {
   const [summary, setSummary] = useState<ReportSummaryData | null>(null);
   const [status, setStatus] = useState<'loading' | 'error' | 'done'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
+  const [selectedEmployee, setSelectedEmployee] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     async function loadSummary() {
@@ -103,8 +105,35 @@ export function ReportSummary() {
         </div>
       )}
 
+      {/* Employee Detail View */}
+      {status === 'done' && summary && selectedEmployee && (
+        <div className="content-grid">
+          <div className="panel" style={{ gridColumn: '1 / -1', border: 'none', background: 'transparent' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>Reporte detallado de {selectedEmployee.name}</h2>
+                <p style={{ margin: '4px 0 0', color: 'var(--text-muted)' }}>Historial completo de asistencias y tardanzas</p>
+              </div>
+              <button 
+                onClick={() => setSelectedEmployee(null)}
+                style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 500 }}
+              >
+                Volver al resumen
+              </button>
+            </div>
+            <ResourceList
+              title="Historial"
+              description="Todas las marcaciones del empleado"
+              endpoint={`/api/attendance?employeeId=${selectedEmployee.id}`}
+              primaryField="workDate"
+              secondaryFields={['clockIn', 'clockOut', 'tardinessMinutes', 'notes']}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Data */}
-      {status === 'done' && summary && (
+      {status === 'done' && summary && !selectedEmployee && (
         <>
           {/* Metric cards row */}
           <div className="metrics-row">
@@ -216,7 +245,12 @@ export function ReportSummary() {
                   </thead>
                   <tbody>
                     {summary.employeeBreakdown && summary.employeeBreakdown.map((emp) => (
-                      <tr key={emp.employeeId}>
+                      <tr 
+                        key={emp.employeeId} 
+                        style={{ cursor: 'pointer' }} 
+                        onClick={() => setSelectedEmployee({ id: emp.employeeId, name: emp.employeeName })}
+                        title="Haz clic para ver el reporte detallado"
+                      >
                         <td><strong>{emp.employeeName}</strong></td>
                         <td>{emp.totalRecords}</td>
                         <td>

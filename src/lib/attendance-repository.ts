@@ -65,10 +65,14 @@ export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
   return buildAttendanceSummary(records);
 }
 
-export async function listAttendanceRecords(): Promise<AttendanceEntryRecord[]> {
+export async function listAttendanceRecords(employeeId?: string): Promise<AttendanceEntryRecord[]> {
   if (!hasSupabaseCredentials()) {
     const database = await loadLocalDatabase();
-    return database.attendanceRecords.map((item) => ({
+    let records = database.attendanceRecords;
+    if (employeeId) {
+      records = records.filter(r => r.employeeId === employeeId);
+    }
+    return records.map((item) => ({
       id: item.id,
       employeeId: item.employeeId,
       workDate: item.workDate,
@@ -81,10 +85,16 @@ export async function listAttendanceRecords(): Promise<AttendanceEntryRecord[]> 
   }
 
   const supabase = createSupabaseClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from('attendance_records')
     .select('id, employee_id, work_date, clock_in, clock_out, tardiness_minutes, notes, employees(full_name)')
     .order('work_date', { ascending: false });
+
+  if (employeeId) {
+    query = query.eq('employee_id', employeeId);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(error.message);

@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createAttendanceRecord, listAttendanceRecords } from '@/lib/attendance-repository';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const records = await listAttendanceRecords();
+    const { searchParams } = new URL(request.url);
+    const employeeId = searchParams.get('employeeId') || undefined;
+    const records = await listAttendanceRecords(employeeId);
     return NextResponse.json(records);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unexpected error';
