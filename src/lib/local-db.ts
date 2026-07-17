@@ -95,7 +95,18 @@ const seedData: LocalDatabase = {
   ]
 };
 
+declare global {
+  var _localDatabase: LocalDatabase | undefined;
+}
+
 async function ensureFile(): Promise<void> {
+  if (process.env.VERCEL) {
+    if (!global._localDatabase) {
+      global._localDatabase = { ...seedData };
+    }
+    return;
+  }
+
   await fs.mkdir(dataDir, { recursive: true });
 
   try {
@@ -107,11 +118,18 @@ async function ensureFile(): Promise<void> {
 
 export async function loadLocalDatabase(): Promise<LocalDatabase> {
   await ensureFile();
+  if (process.env.VERCEL) {
+    return global._localDatabase!;
+  }
   const content = await fs.readFile(dataFile, 'utf8');
   return JSON.parse(content) as LocalDatabase;
 }
 
 export async function saveLocalDatabase(database: LocalDatabase): Promise<void> {
+  if (process.env.VERCEL) {
+    global._localDatabase = database;
+    return;
+  }
   await fs.mkdir(dataDir, { recursive: true });
   await fs.writeFile(dataFile, JSON.stringify(database, null, 2), 'utf8');
 }
