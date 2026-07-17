@@ -74,16 +74,16 @@ export async function listAttendanceRecords(): Promise<AttendanceEntryRecord[]> 
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from('attendance_records')
-    .select('id, employee_id, work_date, clock_in, clock_out, tardiness_minutes, notes')
+    .select('id, employee_id, work_date, clock_in, clock_out, tardiness_minutes, notes, employees(full_name)')
     .order('work_date', { ascending: false });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return (data ?? []).map((item) => ({
+  return (data ?? []).map((item: any) => ({
     id: item.id,
-    employeeId: item.employee_id,
+    employeeId: item.employees?.full_name || item.employee_id,
     workDate: item.work_date,
     scheduledStart: '08:00',
     clockIn: item.clock_in,

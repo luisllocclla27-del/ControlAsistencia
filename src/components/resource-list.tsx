@@ -59,7 +59,7 @@ export function ResourceList({
   useEffect(() => {
     async function loadItems() {
       try {
-        const response = await fetch(endpoint);
+        const response = await fetch(endpoint, { cache: 'no-store' });
         const payload = (await response.json()) as
           | Record<string, unknown>[]
           | { error?: string };
