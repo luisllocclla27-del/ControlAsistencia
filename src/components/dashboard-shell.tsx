@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 /* ===== SVG Icons ===== */
 const icons = {
@@ -133,6 +134,14 @@ export function DashboardShell({ data }: { data: DashboardData }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sectionKey, setSectionKey] = useState(0);
   const clock = useClock();
+  const router = useRouter();
+
+  useEffect(() => {
+    const role = localStorage.getItem('userRole');
+    if (role !== 'admin') {
+      router.push('/login');
+    }
+  }, [router]);
 
   function navigate(tab: TabId) {
     setActiveTab(tab);
@@ -212,8 +221,15 @@ export function DashboardShell({ data }: { data: DashboardData }) {
           ))}
         </nav>
 
-        <div className="sidebar-footer">
-          <span>v1.0.0 — Proyecto Calidad de Software</span>
+        <div className="sidebar-footer" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <button 
+            onClick={() => { localStorage.removeItem('userRole'); router.push('/login'); }} 
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Cerrar Sesión
+          </button>
+          <span style={{ fontSize: '0.75rem' }}>v1.0.0 — Proyecto Calidad de Software</span>
         </div>
       </aside>
 

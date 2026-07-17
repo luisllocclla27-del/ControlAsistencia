@@ -1,30 +1,6 @@
-import { DashboardShell } from '@/components/dashboard-shell';
-import { fetchAttendanceSummary, listAttendanceRecords } from '@/lib/attendance-repository';
-import { listEmployees } from '@/lib/employee-repository';
-import { listShifts } from '@/lib/shift-repository';
+import { redirect } from 'next/navigation';
 
-export const dynamic = 'force-dynamic';
-
-export default async function HomePage() {
-  const [employees, shifts, attendanceRecords, attendanceSummary] = await Promise.all([
-    listEmployees(),
-    listShifts(),
-    listAttendanceRecords(),
-    fetchAttendanceSummary()
-  ]);
-
-  return (
-    <DashboardShell
-      data={{
-        employeeCount: employees.length,
-        shiftCount: shifts.length,
-        attendanceCount: attendanceRecords.length,
-        lateCount: attendanceSummary.lateRecords,
-        totalRecords: attendanceSummary.totalRecords,
-        onTimeRecords: attendanceSummary.onTimeRecords,
-        lateRecords: attendanceSummary.lateRecords,
-        totalTardinessMinutes: attendanceSummary.totalTardinessMinutes,
-      }}
-    />
-  );
+export default function RootPage() {
+  // Redirigir siempre a la página de login
+  redirect('/login');
 }

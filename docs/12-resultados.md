@@ -42,3 +42,13 @@ El dashboard principal presenta las métricas del sistema y un resumen visual de
 Las listas utilizan un componente de tablas avanzado con filtros, contadores dinámicos y "badges" de colores para distinguir estados (Ej. Puntual vs Tardanza).
 
 ![Lista de Empleados](assets/lista_empleados.png)
+
+### 3. Pantalla de Inicio de Sesión
+El sistema cuenta con una pantalla de Login segura donde el empleado ingresa su código para acceder a su portal, separando así los roles administrativos de los usuarios finales.
+
+![Inicio de Sesión](assets/login.png)
+
+### 4. Portal del Empleado (Kiosko)
+Un terminal de autoservicio que muestra la hora en tiempo real y permite al trabajador registrar su entrada y salida mediante botones interactivos, los cuales confirman la hora exacta de la marcación.
+
+![Kiosko de Empleado](assets/kiosko.png)

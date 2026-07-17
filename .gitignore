@@ -8,3 +8,4 @@ coverage
 .env.*.local
 .data
 .DS_Store
+.vercel
