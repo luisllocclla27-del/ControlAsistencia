@@ -6,9 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "next lint",
+    "test": "jest",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -18,17 +18,23 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.14.1",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.2",
     "eslint": "^9.24.0",
     "eslint-config-next": "^15.3.0",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
     "jsdom": "^26.1.0",
     "marked": "^18.0.6",
     "md-to-pdf": "^5.2.5",
     "node-mocks-http": "^1.18.1",
+    "ts-jest": "^29.4.11",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"
   }
