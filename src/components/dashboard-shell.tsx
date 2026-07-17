@@ -381,8 +381,8 @@ export function DashboardShell({ data }: { data: DashboardData }) {
                   title="Historial de asistencia"
                   description="Registros historicos de entrada y tardanza."
                   endpoint="/api/attendance"
-                  primaryField="workDate"
-                  secondaryFields={['clockIn', 'clockOut', 'tardinessMinutes']}
+                  primaryField="employeeId"
+                  secondaryFields={['workDate', 'clockIn', 'clockOut', 'tardinessMinutes']}
                 />
               </div>
             )}

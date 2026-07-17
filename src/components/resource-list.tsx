@@ -42,6 +42,7 @@ const FIELD_LABELS: Record<string, string> = {
   clockIn: 'Entrada',
   clockOut: 'Salida',
   tardinessMinutes: 'Tardanza (min)',
+  employeeId: 'Empleado',
 };
 
 export function ResourceList({
