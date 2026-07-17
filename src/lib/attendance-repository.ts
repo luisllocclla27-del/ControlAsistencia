@@ -47,7 +47,12 @@ export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
     throw new Error(error.message);
   }
 
-  const records = (data ?? []) as AttendanceRecord[];
+  const records: AttendanceRecord[] = (data ?? []).map((item) => ({
+    employeeId: item.employee_id,
+    workDate: item.work_date,
+    tardinessMinutes: item.tardiness_minutes,
+    clockIn: item.clock_in,
+  }));
   return buildAttendanceSummary(records);
 }
 

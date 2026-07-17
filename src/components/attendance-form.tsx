@@ -23,6 +23,7 @@ const initialState: FormState = {
 export function AttendanceForm() {
   const [form, setForm] = useState<FormState>(initialState);
   const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -45,74 +46,112 @@ export function AttendanceForm() {
         throw new Error(payload.error ?? 'No fue posible guardar la asistencia.');
       }
 
-      setMessage(`Registro guardado. Tardanza: ${payload.tardinessMinutes ?? 0} minutos.`);
+      const mins = payload.tardinessMinutes ?? 0;
+      setMessage(
+        mins > 0
+          ? `Registro guardado — Tardanza: ${mins} min`
+          : 'Registro guardado — Ingreso puntual ✓'
+      );
+      setIsSuccess(true);
       setForm(initialState);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Error inesperado');
+      setIsSuccess(false);
     } finally {
       setIsSaving(false);
     }
   }
 
   return (
-    <form className="employee-form" onSubmit={handleSubmit}>
-      <label>
-        ID del empleado
-        <input
-          value={form.employeeId}
-          onChange={(event) => setForm({ ...form, employeeId: event.target.value })}
-          placeholder="uuid del empleado"
-          required
-        />
-      </label>
-      <label>
-        Fecha
-        <input
-          type="date"
-          value={form.workDate}
-          onChange={(event) => setForm({ ...form, workDate: event.target.value })}
-          required
-        />
-      </label>
-      <label>
-        Hora programada
-        <input
-          type="time"
-          value={form.scheduledStart}
-          onChange={(event) => setForm({ ...form, scheduledStart: event.target.value })}
-          required
-        />
-      </label>
-      <label>
-        Hora de ingreso
-        <input
-          type="time"
-          value={form.clockIn}
-          onChange={(event) => setForm({ ...form, clockIn: event.target.value })}
-          required
-        />
-      </label>
-      <label>
-        Hora de salida
-        <input
-          type="time"
-          value={form.clockOut}
-          onChange={(event) => setForm({ ...form, clockOut: event.target.value })}
-        />
-      </label>
-      <label>
-        Observaciones
-        <textarea
-          value={form.notes}
-          onChange={(event) => setForm({ ...form, notes: event.target.value })}
-          placeholder="Opcional"
-          rows={3}
-        />
-      </label>
-      <button type="submit" disabled={isSaving}>
-        {isSaving ? 'Guardando...' : 'Registrar asistencia'}
-      </button>
-      {message ? <p className="form-message">{message}</p> : null}
+    <form className="form-grid" onSubmit={handleSubmit}>
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label" htmlFor="att-emp">ID del empleado</label>
+          <input
+            id="att-emp"
+            className="form-input"
+            value={form.employeeId}
+            onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
+            placeholder="uuid o id del empleado"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="att-date">Fecha</label>
+          <input
+            id="att-date"
+            className="form-input"
+            type="date"
+            value={form.workDate}
+            onChange={(e) => setForm({ ...form, workDate: e.target.value })}
+            required
+          />
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label" htmlFor="att-sched">Hora programada</label>
+          <input
+            id="att-sched"
+            className="form-input"
+            type="time"
+            value={form.scheduledStart}
+            onChange={(e) => setForm({ ...form, scheduledStart: e.target.value })}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="att-in">Hora de ingreso</label>
+          <input
+            id="att-in"
+            className="form-input"
+            type="time"
+            value={form.clockIn}
+            onChange={(e) => setForm({ ...form, clockIn: e.target.value })}
+            required
+          />
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label" htmlFor="att-out">Hora de salida</label>
+          <input
+            id="att-out"
+            className="form-input"
+            type="time"
+            value={form.clockOut}
+            onChange={(e) => setForm({ ...form, clockOut: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="att-notes">Observaciones</label>
+          <input
+            id="att-notes"
+            className="form-input"
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            placeholder="Opcional"
+          />
+        </div>
+      </div>
+      <div>
+        <button className="btn btn-primary" type="submit" disabled={isSaving}>
+          {isSaving ? (
+            <>
+              <span className="spinner" />
+              Guardando...
+            </>
+          ) : (
+            'Registrar asistencia'
+          )}
+        </button>
+      </div>
+      {message && (
+        <div className={`toast ${isSuccess ? 'toast-success' : 'toast-error'}`}>
+          <span className="toast-icon">{isSuccess ? '✓' : '✕'}</span>
+          {message}
+        </div>
+      )}
     </form>
   );
 }

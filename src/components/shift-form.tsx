@@ -19,6 +19,7 @@ const initialState: FormState = {
 export function ShiftForm() {
   const [form, setForm] = useState<FormState>(initialState);
   const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -47,57 +48,83 @@ export function ShiftForm() {
       }
 
       setMessage(`Turno registrado: ${payload.name ?? form.name}`);
+      setIsSuccess(true);
       setForm(initialState);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Error inesperado');
+      setIsSuccess(false);
     } finally {
       setIsSaving(false);
     }
   }
 
   return (
-    <form className="employee-form" onSubmit={handleSubmit}>
-      <label>
-        Nombre del turno
+    <form className="form-grid" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label className="form-label" htmlFor="shift-name">Nombre del turno</label>
         <input
+          id="shift-name"
+          className="form-input"
           value={form.name}
-          onChange={(event) => setForm({ ...form, name: event.target.value })}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
           placeholder="Turno mañana"
           required
         />
-      </label>
-      <label>
-        Hora de inicio
+      </div>
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label" htmlFor="shift-start">Hora de inicio</label>
+          <input
+            id="shift-start"
+            className="form-input"
+            type="time"
+            value={form.startTime}
+            onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="shift-end">Hora de fin</label>
+          <input
+            id="shift-end"
+            className="form-input"
+            type="time"
+            value={form.endTime}
+            onChange={(e) => setForm({ ...form, endTime: e.target.value })}
+            required
+          />
+        </div>
+      </div>
+      <div className="form-group">
+        <label className="form-label" htmlFor="shift-tol">Tolerancia (minutos)</label>
         <input
-          type="time"
-          value={form.startTime}
-          onChange={(event) => setForm({ ...form, startTime: event.target.value })}
-          required
-        />
-      </label>
-      <label>
-        Hora de fin
-        <input
-          type="time"
-          value={form.endTime}
-          onChange={(event) => setForm({ ...form, endTime: event.target.value })}
-          required
-        />
-      </label>
-      <label>
-        Tolerancia en minutos
-        <input
+          id="shift-tol"
+          className="form-input"
           type="number"
           min="0"
           value={form.toleranceMinutes}
-          onChange={(event) => setForm({ ...form, toleranceMinutes: event.target.value })}
+          onChange={(e) => setForm({ ...form, toleranceMinutes: e.target.value })}
           required
         />
-      </label>
-      <button type="submit" disabled={isSaving}>
-        {isSaving ? 'Guardando...' : 'Registrar turno'}
-      </button>
-      {message ? <p className="form-message">{message}</p> : null}
+      </div>
+      <div>
+        <button className="btn btn-primary" type="submit" disabled={isSaving}>
+          {isSaving ? (
+            <>
+              <span className="spinner" />
+              Guardando...
+            </>
+          ) : (
+            'Registrar turno'
+          )}
+        </button>
+      </div>
+      {message && (
+        <div className={`toast ${isSuccess ? 'toast-success' : 'toast-error'}`}>
+          <span className="toast-icon">{isSuccess ? '✓' : '✕'}</span>
+          {message}
+        </div>
+      )}
     </form>
   );
 }

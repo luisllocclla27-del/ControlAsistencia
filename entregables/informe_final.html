@@ -1,0 +1,524 @@
+
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Informe Final</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { color: #333; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        img { max-width: 100%; }
+        .page-break { page-break-before: always; }
+      </style>
+    </head>
+    <body>
+      <h1>INFORME FINAL - PROYECTO CALIDAD DE SOFTWARE</h1>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Planteamiento del problema</h1>
+<h2>Problema general</h2>
+<p>La gestion manual de la asistencia y los retardos de los empleados provoca errores de registro, dificulta el seguimiento de horarios y reduce la confiabilidad de los reportes administrativos.</p>
+<h2>Problemas especificos</h2>
+<ul>
+<li>El registro manual de entradas y salidas puede generar omisiones y datos inconsistentes.</li>
+<li>No existe trazabilidad suficiente para identificar tardanzas, ausencias y observaciones.</li>
+<li>La elaboracion de reportes consume tiempo y depende de procesos repetitivos.</li>
+<li>La informacion puede quedar dispersa en hojas de calculo o formularios sin control centralizado.</li>
+</ul>
+<h2>Contexto</h2>
+<p>La empresa o institucion necesita un sistema centralizado que almacene los datos de asistencia en una base de datos, permita consultar historiales por empleado y genere reportes utiles para control administrativo y toma de decisiones.</p>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Objetivos</h1>
+<h2>Objetivo general</h2>
+<p>Desarrollar un sistema web para el control de asistencia y retardos de empleados con base de datos, pruebas automatizadas y despliegue en linea, aplicando practicas de SDD y Scrum.</p>
+<h2>Objetivos especificos</h2>
+<ul>
+<li>Analizar las necesidades funcionales y no funcionales del proceso de control de asistencia.</li>
+<li>Disenar la estructura del sistema y el modelo de datos para registrar empleados, horarios y asistencias.</li>
+<li>Implementar una aplicacion web que permita registrar entradas, salidas, tardanzas y reportes.</li>
+<li>Incorporar pruebas unitarias e integracion para validar reglas de negocio y flujo entre modulos.</li>
+<li>Desplegar la aplicacion y documentar la evidencia tecnica del proyecto.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Resumen ejecutivo</h1>
+<p>El presente proyecto propone el desarrollo de un sistema web para el control de asistencia y retardos de empleados, respaldado por una base de datos PostgreSQL en Supabase y desplegado en Vercel. La solucion responde a la necesidad de reemplazar registros manuales o dispersos por un sistema centralizado, trazable y facil de consultar.</p>
+<p>El trabajo se desarrollo bajo un enfoque de SDD y Scrum. Primero se definieron el problema, los objetivos, la justificacion, las limitaciones y el alcance. Posteriormente se diseno el modelo de datos, se organizaron los entregables en sprints y se implemento un MVP funcional con modulos de empleados, turnos, asistencia, roles y reportes.</p>
+<p>Como parte de la calidad del software, se incluyeron pruebas unitarias para validar reglas de tardanza, calculo de tiempo trabajado y resumen de asistencias, asi como pruebas de integracion orientadas a la persistencia y consulta de datos mediante rutas API. Tambien se preparo un esquema SQL, datos semilla y una estrategia de despliegue reproducible.</p>
+<p>En conjunto, el proyecto demuestra el ciclo de vida completo del software y genera evidencia util para la presentacion academica, el informe final en Word, el repositorio en GitHub y la exposicion oral.</p>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Justificacion</h1>
+<p>El proyecto se justifica porque automatiza un proceso frecuente y de alto impacto en cualquier organizacion: el control de asistencia. Al reemplazar registros manuales por un sistema web con base de datos, se reducen errores, se mejora la trazabilidad y se facilita la consulta de informacion historica.</p>
+<p>Desde la perspectiva academica, el proyecto permite demostrar el ciclo de vida completo del software, desde el analisis y diseno hasta la programacion, pruebas y despliegue. Ademas, facilita evidencias claras de SDD y Scrum, ya que cada parte del sistema puede documentarse con requisitos, historias de usuario, entregables por sprint y pruebas verificables.</p>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Limitaciones y alcance</h1>
+<h2>Alcance</h2>
+<p>El sistema incluiria el registro de empleados, horarios, entradas, salidas, tardanzas y reportes basicos. Tambien contemplaria roles de acceso y una base de datos centralizada para conservar la informacion.</p>
+<h2>Limitaciones</h2>
+<ul>
+<li>No incluye biometria ni hardware especializado.</li>
+<li>No cubre nomina ni calculo salarial.</li>
+<li>No integra geolocalizacion ni validacion avanzada por dispositivo.</li>
+<li>No contempla analitica compleja o inteligencia artificial en la primera version.</li>
+<li>El alcance inicial se enfoca en un producto minimo viable que sea demostrable y defendible en el tiempo disponible.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Marco teorico</h1>
+<h2>Ciclo de vida del software</h2>
+<p>El ciclo de vida del software incluye analisis, diseno, programacion, pruebas, despliegue y mantenimiento. En este proyecto se documenta cada fase para mostrar como la solucion evoluciona desde el problema hasta una aplicacion usable.</p>
+<h2>SDD</h2>
+<p>SDD se entiende aqui como un enfoque de desarrollo guiado por especificaciones y diseno previo. Primero se definen requisitos, reglas de negocio y criterios de aceptacion; luego se diseña la solucion y finalmente se implementa y verifica contra lo especificado.</p>
+<h2>Scrum</h2>
+<p>Scrum organiza el trabajo en incrementos cortos llamados sprints. Para este proyecto, Scrum sirve para dividir el trabajo en entregables pequenos: analisis, diseno, base de datos, implementacion, pruebas y despliegue.</p>
+<h2>Pruebas de software</h2>
+<p>Las pruebas unitarias verifican funciones o reglas individuales. Las pruebas de integracion comprueban que los modulos trabajen juntos correctamente, por ejemplo, al registrar una asistencia y guardar el dato en la base de datos.</p>
+<h2>Despliegue</h2>
+<p>El despliegue permite publicar la aplicacion en un entorno accesible para la demo final. Para este proyecto se propone Vercel para la app web y Supabase para la base de datos PostgreSQL.</p>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Materiales y metodos</h1>
+<h2>Materiales</h2>
+<ul>
+<li>Editor de codigo: Visual Studio Code</li>
+<li>Control de versiones: Git y GitHub</li>
+<li>Frontend: Next.js con TypeScript</li>
+<li>Base de datos: PostgreSQL en Supabase</li>
+<li>Despliegue: Vercel</li>
+<li>Pruebas: Vitest y Testing Library</li>
+</ul>
+<h2>Metodos</h2>
+<ol>
+<li>Levantamiento de requisitos a partir del problema definido.</li>
+<li>Elaboracion de historias de usuario y criterios de aceptacion.</li>
+<li>Diseno del modelo de datos y reglas de negocio.</li>
+<li>Implementacion incremental del sistema.</li>
+<li>Elaboracion y ejecucion de pruebas.</li>
+<li>Despliegue y documentacion de resultados.</li>
+</ol>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Analisis y diseno bajo SDD</h1>
+<h2>Vision de producto</h2>
+<p>El sistema permite centralizar el control de asistencia y retardos de empleados en una aplicacion web con base de datos. El usuario principal puede registrar personal, definir turnos, capturar asistencias y revisar reportes historicos sin depender de hojas de calculo manuales.</p>
+<h2>Requisitos funcionales</h2>
+<ul>
+<li>RF01: Registrar empleados con codigo, nombre, correo y estado.</li>
+<li>RF02: Registrar turnos con hora de inicio, hora de fin y tolerancia.</li>
+<li>RF03: Registrar entradas y salidas de asistencia por empleado y fecha.</li>
+<li>RF04: Calcular minutos de tardanza segun el turno asignado.</li>
+<li>RF05: Consultar historial de asistencia por empleado.</li>
+<li>RF06: Generar reportes basicos por rango de fechas.</li>
+<li>RF07: Gestionar acceso por roles para administrador y supervisor.</li>
+</ul>
+<h2>Requisitos no funcionales</h2>
+<ul>
+<li>RNF01: La aplicacion debe ser accesible desde navegador web.</li>
+<li>RNF02: La informacion debe persistirse en PostgreSQL.</li>
+<li>RNF03: La logica critica debe contar con pruebas unitarias.</li>
+<li>RNF04: Los modulos principales deben validar el flujo de datos con pruebas de integracion.</li>
+<li>RNF05: La aplicacion debe poder desplegarse en un entorno publico.</li>
+</ul>
+<h2>Historias de usuario</h2>
+<ul>
+<li>HU01: Como administrador, quiero registrar empleados para tener control del personal.</li>
+<li>HU02: Como administrador, quiero definir turnos para comparar la hora real con la hora programada.</li>
+<li>HU03: Como encargado, quiero registrar entradas y salidas para llevar asistencia diaria.</li>
+<li>HU04: Como supervisor, quiero ver tardanzas acumuladas para detectar incumplimientos.</li>
+<li>HU05: Como supervisor, quiero consultar reportes por fecha para revisar comportamiento historico.</li>
+</ul>
+<h2>Criterios de aceptacion</h2>
+<ul>
+<li>CA01: El sistema guarda empleados y turnos en la base de datos.</li>
+<li>CA02: El sistema no permite duplicar registros de asistencia para el mismo empleado y fecha.</li>
+<li>CA03: El sistema calcula tardanza cuando la hora de ingreso supera la hora del turno.</li>
+<li>CA04: El sistema muestra historiales y reportes con datos consistentes.</li>
+<li>CA05: Las reglas criticas deben pasar pruebas automatizadas.</li>
+</ul>
+<h2>Casos de uso resumidos</h2>
+<h3>Caso de uso: Registrar empleado</h3>
+<p>Actor principal: administrador.
+Resultado esperado: el empleado queda disponible para los modulos de asistencia y reportes.</p>
+<h3>Caso de uso: Registrar asistencia</h3>
+<p>Actor principal: encargado.
+Resultado esperado: la asistencia se guarda y se calcula la tardanza asociada al turno.</p>
+<h3>Caso de uso: Consultar reportes</h3>
+<p>Actor principal: supervisor.
+Resultado esperado: el sistema muestra un resumen de asistencia por rango de fechas.</p>
+<h2>Trazabilidad inicial</h2>
+<ul>
+<li>RF01 -&gt; tabla employees</li>
+<li>RF02 -&gt; tabla shifts</li>
+<li>RF03 -&gt; tabla attendance_records</li>
+<li>RF04 -&gt; funcion calculateTardinessMinutes</li>
+<li>RF05 -&gt; consulta por employee_id sobre attendance_records</li>
+<li>RF06 -&gt; componente o endpoint de reportes</li>
+<li>RF07 -&gt; tablas roles y profiles</li>
+</ul>
+<h2>Suposiciones de diseno</h2>
+<ul>
+<li>La hora de referencia se maneja en formato de 24 horas.</li>
+<li>La tardanza se calcula en minutos enteros.</li>
+<li>Cada empleado puede tener un unico registro por fecha.</li>
+<li>El sistema inicial no incluye biometria ni hardware externo.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Gestion del proyecto con Scrum</h1>
+<h2>Product backlog inicial</h2>
+<ol>
+<li>Registrar empleados.</li>
+<li>Registrar horarios.</li>
+<li>Registrar entradas y salidas.</li>
+<li>Calcular tardanzas.</li>
+<li>Generar reportes basicos.</li>
+<li>Desplegar la aplicacion.</li>
+</ol>
+<h2>Sprints propuestos</h2>
+<ul>
+<li>Sprint 1: analisis del problema, alcance y requisitos.</li>
+<li>Sprint 2: diseno de base de datos y estructura tecnica.</li>
+<li>Sprint 3: implementacion del modulo de registro.</li>
+<li>Sprint 4: pruebas, ajustes y despliegue.</li>
+</ul>
+<h2>Entregables por sprint</h2>
+<ul>
+<li>Documentacion en Markdown.</li>
+<li>Modelo de datos.</li>
+<li>Codigo fuente funcional.</li>
+<li>Evidencia de pruebas.</li>
+<li>Evidencia de despliegue.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Diseno de base de datos</h1>
+<h2>Tablas iniciales</h2>
+<ul>
+<li>roles</li>
+<li>profiles</li>
+<li>employees</li>
+<li>shifts</li>
+<li>attendance_records</li>
+<li>audit_logs</li>
+</ul>
+<h2>Relaciones principales</h2>
+<ul>
+<li>Un rol puede tener muchos perfiles.</li>
+<li>Un perfil puede estar asociado a un empleado.</li>
+<li>Un empleado puede tener muchos registros de asistencia.</li>
+<li>Un turno puede asociarse a varios registros de asistencia.</li>
+</ul>
+<h2>Reglas de negocio</h2>
+<ul>
+<li>Cada empleado debe tener un identificador unico.</li>
+<li>Un registro de asistencia no debe duplicarse para el mismo empleado y fecha.</li>
+<li>La tardanza se calcula comparando la hora de ingreso con el horario del turno.</li>
+<li>Los reportes deben basarse en datos guardados en la base de datos y no en valores manuales.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Pruebas unitarias e integracion</h1>
+<h2>Pruebas unitarias</h2>
+<ul>
+<li>Calculo de tardanza.</li>
+<li>Clasificacion de asistencia puntual o tardia.</li>
+<li>Resumen de minutos trabajados.</li>
+<li>Validacion de bordes como reloj de salida anterior al de entrada.</li>
+<li>Resumen vacio cuando no existen registros.</li>
+</ul>
+<h2>Pruebas de integracion</h2>
+<ul>
+<li>Registro de asistencia y persistencia en la base de datos.</li>
+<li>Consulta de historial por empleado.</li>
+<li>Generacion de reportes con datos reales.</li>
+<li>Registro de empleados con la ruta <code>/api/employees</code>.</li>
+<li>Registro de turnos con la ruta <code>/api/shifts</code>.</li>
+<li>Verificacion de roles con la ruta <code>/api/roles</code>.</li>
+</ul>
+<h2>Evidencia esperada</h2>
+<ul>
+<li>Casos de prueba escritos.</li>
+<li>Ejecucion automatizada en la terminal.</li>
+<li>Resultados correctos sin fallos criticos.</li>
+</ul>
+<h2>Criterios de exito</h2>
+<ul>
+<li>Las funciones puras deben devolver el resultado esperado en situaciones normales y bordes.</li>
+<li>Las rutas API deben aceptar datos validos y rechazar campos incompletos.</li>
+<li>El reporte debe conservar la consistencia entre totales, tardanzas y puntualidad.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Despliegue de la aplicacion</h1>
+<h2>Estrategia propuesta</h2>
+<ul>
+<li>Frontend y despliegue: Vercel.</li>
+<li>Base de datos: Supabase PostgreSQL.</li>
+<li>Variables de entorno: credenciales de Supabase.</li>
+<li>Datos semilla: <code>supabase/seed.sql</code> para cargar un escenario de demostracion.</li>
+</ul>
+<h2>Flujo de publicacion</h2>
+<ol>
+<li>Crear el proyecto en Supabase y ejecutar <code>supabase/schema.sql</code>.</li>
+<li>Cargar <code>supabase/seed.sql</code> para disponer de datos de prueba.</li>
+<li>Configurar las variables de entorno en Vercel.</li>
+<li>Publicar la aplicacion desde el repositorio de GitHub.</li>
+<li>Verificar las rutas <code>/api/employees</code>, <code>/api/shifts</code>, <code>/api/attendance</code> y <code>/api/roles</code>.</li>
+</ol>
+<h2>Evidencia requerida</h2>
+<ul>
+<li>URL publica de la aplicacion.</li>
+<li>Capturas del sistema funcionando.</li>
+<li>Capturas o registros del panel de base de datos.</li>
+<li>Descripcion breve de configuracion y publicacion.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Resultados</h1>
+<h2>Resultados esperados</h2>
+<ul>
+<li>Sistema capaz de registrar empleados, turnos, asistencias y roles desde una interfaz web.</li>
+<li>Base de datos estructurada y consultable mediante rutas API.</li>
+<li>Pruebas automatizadas ejecutadas correctamente para reglas de tardanza, resumen y bordes.</li>
+<li>Aplicacion preparada para despliegue con Supabase y Vercel.</li>
+</ul>
+<h2>Indicadores de exito</h2>
+<ul>
+<li>Reduccion de errores de registro al centralizar la informacion en una base de datos.</li>
+<li>Mejora de trazabilidad al relacionar empleados, turnos y asistencias.</li>
+<li>Generacion de reportes rapidos y consistentes desde datos persistidos.</li>
+<li>Evidencia clara de SDD, Scrum, pruebas y despliegue en la documentacion del proyecto.</li>
+</ul>
+<h2>Resultados obtenidos en el proyecto</h2>
+<ul>
+<li>Se definio una estructura documental completa en Markdown para el informe final.</li>
+<li>Se implemento un MVP funcional con formularios para empleados, asistencia, turnos y roles.</li>
+<li>Se construyeron funciones puras para calcular tardanza, tiempo trabajado y resumen de asistencia.</li>
+<li>Se agregaron rutas API para consultar y registrar informacion con base de datos.</li>
+<li>Se preparo el esquema SQL y un archivo de semillas para una demostracion reproducible.</li>
+</ul>
+<h2>Evidencia tecnica</h2>
+<ul>
+<li>Validacion de sintaxis y tipado sin errores en el subproyecto.</li>
+<li>Pruebas unitarias para casos normales y bordes.</li>
+<li>Componentes de interfaz conectados a rutas API.</li>
+<li>Documentacion de despliegue y flujo de publicacion.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Conclusiones y recomendaciones</h1>
+<h2>Conclusiones</h2>
+<p>El proyecto permite demostrar el desarrollo completo de una solucion de software con base de datos, documentacion formal, pruebas y despliegue. Tambien deja evidencia clara de trabajo bajo SDD y Scrum, porque los requisitos, el diseno, la implementacion y la verificacion quedaron enlazados desde el inicio.</p>
+<p>La solucion propuesta es adecuada para un proyecto academico porque su alcance es suficiente para mostrar analisis, diseno, programacion, pruebas y despliegue sin depender de hardware especializado ni de integraciones complejas. Esto facilita la defensa oral y la demostracion tecnica.</p>
+<p>La estructura documental en Markdown permite construir el informe final en Word y la presentacion en PPT sin rehacer el contenido. Ademas, el repositorio queda preparado para mostrar trazabilidad entre requisitos, base de datos, pruebas y resultados.</p>
+<h2>Recomendaciones</h2>
+<ul>
+<li>Completar el guardado real en Supabase si el entorno de prueba ya esta configurado con credenciales.</li>
+<li>Mantener trazabilidad entre requisitos, historias de usuario, tablas, rutas API y pruebas.</li>
+<li>Guardar capturas de la interfaz, del esquema de base de datos y de la ejecucion de pruebas como soporte de defensa.</li>
+<li>Exportar la documentacion final a Word y reutilizar el guion de PPT para la exposicion.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Matriz de trazabilidad</h1>
+<table>
+<thead>
+<tr>
+<th align="left">Requisito</th>
+<th align="left">Historia de usuario</th>
+<th align="left">Modulo</th>
+<th align="left">Tabla / ruta</th>
+<th align="left">Prueba</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Registrar empleados</td>
+<td align="left">HU01</td>
+<td align="left">Administracion de empleados</td>
+<td align="left"><code>employees</code> / <code>/api/employees</code></td>
+<td align="left">Creacion de empleado</td>
+</tr>
+<tr>
+<td align="left">Definir turnos</td>
+<td align="left">HU02</td>
+<td align="left">Gestion de turnos</td>
+<td align="left"><code>shifts</code> / <code>/api/shifts</code></td>
+<td align="left">Creacion de turno</td>
+</tr>
+<tr>
+<td align="left">Registrar asistencia</td>
+<td align="left">HU03</td>
+<td align="left">Registro de asistencia</td>
+<td align="left"><code>attendance_records</code> / <code>/api/attendance</code></td>
+<td align="left">Tardanza y guardado</td>
+</tr>
+<tr>
+<td align="left">Calcular tardanzas</td>
+<td align="left">HU03, HU04</td>
+<td align="left">Registro de asistencia</td>
+<td align="left"><code>calculateTardinessMinutes</code></td>
+<td align="left">Caso puntual y tardio</td>
+</tr>
+<tr>
+<td align="left">Consultar reportes</td>
+<td align="left">HU05</td>
+<td align="left">Reportes</td>
+<td align="left"><code>/api/reports</code></td>
+<td align="left">Resumen de asistencia</td>
+</tr>
+<tr>
+<td align="left">Gestionar roles</td>
+<td align="left">HU07</td>
+<td align="left">Autenticacion y roles</td>
+<td align="left"><code>roles</code> / <code>/api/roles</code></td>
+<td align="left">Registro de rol</td>
+</tr>
+</tbody></table>
+<h2>Observacion</h2>
+<p>La matriz muestra como cada requisito funcional del proyecto se conecta con una historia de usuario, un modulo, una estructura de datos y una prueba automatizada o de integracion. Esto facilita demostrar SDD ante el docente.</p>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Control de versiones</h1>
+<h2>Objetivo</h2>
+<p>Organizar el desarrollo del proyecto mediante Git y GitHub para registrar avances, controlar cambios y conservar evidencia del trabajo incremental.</p>
+<h2>Estrategia de trabajo</h2>
+<ul>
+<li>Repositorio remoto: GitHub.</li>
+<li>Rama principal: <code>main</code>.</li>
+<li>Trabajo de implementacion: cambios pequeños y frecuentes.</li>
+<li>Evidencia de avance: commits descriptivos y consistentes.</li>
+</ul>
+<h2>Flujo sugerido</h2>
+<ol>
+<li>Crear o actualizar una rama de trabajo cuando exista una tarea amplia.</li>
+<li>Implementar un cambio acotado por vez.</li>
+<li>Validar el cambio con pruebas o revision local.</li>
+<li>Registrar el commit con un mensaje claro.</li>
+<li>Subir el avance al repositorio remoto.</li>
+</ol>
+<h2>Convenciones de commit</h2>
+<ul>
+<li><code>feat</code>: nueva funcionalidad.</li>
+<li><code>fix</code>: correccion de error.</li>
+<li><code>docs</code>: cambios en documentacion.</li>
+<li><code>test</code>: cambios en pruebas.</li>
+<li><code>refactor</code>: mejora interna sin cambio funcional.</li>
+</ul>
+<h2>Evidencias para el docente</h2>
+<ul>
+<li>Historial de commits en GitHub.</li>
+<li>Trazabilidad entre commits, sprints y entregables.</li>
+<li>Uso de ramas y mensajes descriptivos.</li>
+<li>Relacion entre codigo, pruebas y documentacion.</li>
+</ul>
+<h2>Beneficio academico</h2>
+<p>El control de versiones permite demostrar que el proyecto no fue desarrollado en un solo bloque, sino de forma incremental y organizada, lo cual refuerza la aplicacion de Scrum y el seguimiento del ciclo de vida del software.</p>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Referencias</h1>
+<ul>
+<li>The Scrum Guide. Schwaber, K. y Sutherland, J. 2020.</li>
+<li>Sommerville, I. Software Engineering. 10th edition.</li>
+<li>Documentacion oficial de Next.js: <a href="https://nextjs.org/docs">https://nextjs.org/docs</a></li>
+<li>Documentacion oficial de Supabase: <a href="https://supabase.com/docs">https://supabase.com/docs</a></li>
+<li>Documentacion oficial de Vitest: <a href="https://vitest.dev">https://vitest.dev</a></li>
+<li>Documentacion oficial de Testing Library: <a href="https://testing-library.com/docs">https://testing-library.com/docs</a></li>
+<li>Documentacion oficial de GitHub: <a href="https://docs.github.com">https://docs.github.com</a></li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Checklist de entrega final</h1>
+<h2>Documento Word</h2>
+<ul>
+<li>Portada.</li>
+<li>Resumen ejecutivo.</li>
+<li>Planteamiento del problema.</li>
+<li>Objetivos.</li>
+<li>Justificacion.</li>
+<li>Limitaciones y alcance.</li>
+<li>Marco teorico.</li>
+<li>Materiales y metodos.</li>
+<li>Analisis y diseno bajo SDD.</li>
+<li>Gestion con Scrum.</li>
+<li>Diseno de base de datos.</li>
+<li>Implementacion.</li>
+<li>Pruebas.</li>
+<li>Despliegue.</li>
+<li>Resultados.</li>
+<li>Conclusiones.</li>
+<li>Referencias.</li>
+<li>Anexos.</li>
+</ul>
+<h2>Presentacion PPT</h2>
+<ul>
+<li>Problema.</li>
+<li>Objetivos.</li>
+<li>Justificacion.</li>
+<li>Alcance.</li>
+<li>SDD y Scrum.</li>
+<li>Base de datos.</li>
+<li>Implementacion y pruebas.</li>
+<li>Despliegue.</li>
+<li>Resultados y conclusiones.</li>
+</ul>
+<h2>GitHub</h2>
+<ul>
+<li>Codigo fuente.</li>
+<li>Esquema SQL.</li>
+<li>Datos semilla.</li>
+<li>Pruebas.</li>
+<li>Documentacion en Markdown.</li>
+<li>Capturas o evidencias de despliegue.</li>
+</ul>
+<h2>Verificacion final</h2>
+<ul>
+<li>El proyecto debe compilar sin errores.</li>
+<li>Las pruebas deben pasar.</li>
+<li>La aplicacion debe estar desplegada o lista para desplegar.</li>
+<li>Las evidencias deben coincidir con lo documentado.</li>
+</ul>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Defensa oral</h1>
+<h2>Apertura</h2>
+<p>Buenos dias. Presento el proyecto Sistema de control de asistencia y retardos para empleados, una solucion web disenada para reemplazar procesos manuales y mejorar la trazabilidad del registro de personal.</p>
+<h2>Problema</h2>
+<p>Actualmente, el control manual de asistencia genera errores, retrabajo y dificultad para consultar historiales de forma confiable. Por eso se propuso una aplicacion centralizada con base de datos.</p>
+<h2>Solucion propuesta</h2>
+<p>La solucion incluye modulos de empleados, turnos, asistencia, roles y reportes. La informacion se organiza en Supabase PostgreSQL y la aplicacion se despliega en Vercel para su demostracion.</p>
+<h2>Metodologia</h2>
+<p>El trabajo se desarrollo bajo SDD y Scrum. Primero se definieron requisitos, objetivos, justificacion, limitaciones y trazabilidad. Luego se diseno la base de datos, se implemento el MVP y se agregaron pruebas unitarias e integracion.</p>
+<h2>Evidencia tecnica</h2>
+<p>Se crearon rutas API para empleados, turnos, asistencia, roles y reportes. Tambien se prepararon datos semilla, control de versiones en GitHub y una matriz de trazabilidad para relacionar requisitos, modulos y pruebas.</p>
+<h2>Resultados</h2>
+<p>El proyecto ya cuenta con una base funcional para registrar y consultar informacion, validar reglas de negocio y presentar evidencia academica clara en Word, PPT y GitHub.</p>
+<h2>Cierre</h2>
+<p>Como conclusion, el proyecto demuestra el ciclo de vida completo del software y deja evidencia de desarrollo incremental, control de versiones, pruebas y despliegue. Muchas gracias.</p>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Indice general</h1>
+<ol>
+<li>Portada</li>
+<li>Resumen ejecutivo</li>
+<li>Planteamiento del problema</li>
+<li>Objetivos</li>
+<li>Justificacion</li>
+<li>Limitaciones y alcance</li>
+<li>Marco teorico</li>
+<li>Materiales y metodos</li>
+<li>Analisis y diseno bajo SDD</li>
+<li>Gestion del proyecto con Scrum</li>
+<li>Control de versiones</li>
+<li>Diseno de base de datos</li>
+<li>Implementacion del sistema</li>
+<li>Pruebas unitarias e integracion</li>
+<li>Despliegue de la aplicacion</li>
+<li>Resultados</li>
+<li>Conclusiones y recomendaciones</li>
+<li>Referencias</li>
+<li>Matriz de trazabilidad</li>
+<li>Checklist de entrega final</li>
+<li>Defensa oral</li>
+<li>Anexos</li>
+</ol>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Anexos</h1>
+<ul>
+<li>Capturas de la aplicacion principal mostrando empleados, turnos, asistencia, roles y reportes.</li>
+<li>Capturas de las rutas API o respuestas JSON para validar el flujo de datos.</li>
+<li>Evidencia de pruebas unitarias con resultados de la terminal.</li>
+<li>Capturas o enlaces del despliegue en Vercel.</li>
+<li>Capturas del esquema y tablas en Supabase.</li>
+<li>Historial de commits en GitHub como evidencia de trabajo incremental.</li>
+<li>Copia del esquema SQL y del archivo de semillas usados para la demostracion.</li>
+</ul>
+
+    </body>
+    </html>
+  
