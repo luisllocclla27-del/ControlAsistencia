@@ -81,6 +81,28 @@ export function ReportSummary() {
       ? Math.round(summary.totalTardinessMinutes / summary.lateRecords)
       : 0;
 
+  function exportSummaryToCSV() {
+    if (!summary || !summary.employeeBreakdown) return;
+    const headers = ['Empleado', 'Asistencias', 'Puntuales', 'Tardanzas', 'Salidas Anticipadas', 'Total Min. Tardanza'];
+    const rows = summary.employeeBreakdown.map(emp => [
+      `"${emp.employeeName}"`,
+      emp.totalRecords,
+      emp.onTimeRecords,
+      emp.lateRecords,
+      emp.earlyDepartures,
+      emp.totalTardinessMinutes
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `reporte_general_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     <div>
       {/* Loading */}
@@ -225,11 +247,18 @@ export function ReportSummary() {
 
             {/* Employee Breakdown Table */}
             <div className="panel" style={{ gridColumn: '1 / -1' }}>
-              <div className="panel-header">
+              <div className="panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <h2>Reporte por Empleado</h2>
                   <p className="panel-description">Resumen completo consolidado por trabajador</p>
                 </div>
+                <button 
+                  onClick={exportSummaryToCSV}
+                  style={{ background: 'var(--success)', border: 'none', color: 'white', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Exportar a CSV
+                </button>
               </div>
               <div className="table-wrapper">
                 <table className="data-table">
