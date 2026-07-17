@@ -32,6 +32,15 @@ interface ReportSummaryData {
   lateRecords: number;
   onTimeRecords: number;
   totalTardinessMinutes: number;
+  employeeBreakdown?: {
+    employeeId: string;
+    employeeName: string;
+    totalRecords: number;
+    onTimeRecords: number;
+    lateRecords: number;
+    earlyDepartures: number;
+    totalTardinessMinutes: number;
+  }[];
 }
 
 export function ReportSummary() {
@@ -182,6 +191,65 @@ export function ReportSummary() {
                   <span className="report-label">Registros puntuales</span>
                   <div className="report-value text-green">{summary.onTimeRecords}</div>
                 </div>
+              </div>
+            </div>
+
+            {/* Employee Breakdown Table */}
+            <div className="panel" style={{ gridColumn: '1 / -1' }}>
+              <div className="panel-header">
+                <div>
+                  <h2>Reporte por Empleado</h2>
+                  <p className="panel-description">Resumen completo consolidado por trabajador</p>
+                </div>
+              </div>
+              <div className="table-wrapper">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Empleado</th>
+                      <th>Asistencias</th>
+                      <th>Puntuales</th>
+                      <th>Tardanzas</th>
+                      <th>Salidas Anticipadas</th>
+                      <th>Total Min. Tardanza</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {summary.employeeBreakdown && summary.employeeBreakdown.map((emp) => (
+                      <tr key={emp.employeeId}>
+                        <td><strong>{emp.employeeName}</strong></td>
+                        <td>{emp.totalRecords}</td>
+                        <td>
+                          <span className={`record-badge ${emp.onTimeRecords > 0 ? 'badge-green' : ''}`}>
+                            {emp.onTimeRecords}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`record-badge ${emp.lateRecords > 0 ? 'badge-amber' : ''}`}>
+                            {emp.lateRecords}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`record-badge ${emp.earlyDepartures > 0 ? 'badge-red' : ''}`}>
+                            {emp.earlyDepartures}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={emp.totalTardinessMinutes > 0 ? 'text-amber' : ''} style={{ fontWeight: emp.totalTardinessMinutes > 0 ? 600 : 'normal' }}>
+                            {emp.totalTardinessMinutes} min
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                    {(!summary.employeeBreakdown || summary.employeeBreakdown.length === 0) && (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
+                          No hay registros suficientes para mostrar.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

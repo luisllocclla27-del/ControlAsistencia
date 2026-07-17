@@ -27,12 +27,18 @@ export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
   if (!hasSupabaseCredentials()) {
     const database = await loadLocalDatabase();
     return buildAttendanceSummary(
-      database.attendanceRecords.map((item) => ({
-        employeeId: item.employeeId,
-        workDate: item.workDate,
-        tardinessMinutes: item.tardinessMinutes,
-        clockIn: item.clockIn
-      }))
+      database.attendanceRecords.map((item) => {
+        const emp = database.employees.find(e => e.id === item.employeeId);
+        return {
+          employeeId: item.employeeId,
+          employeeName: emp?.fullName,
+          workDate: item.workDate,
+          tardinessMinutes: item.tardinessMinutes,
+          clockIn: item.clockIn,
+          clockOut: item.clockOut,
+          notes: item.notes
+        };
+      })
     );
   }
 
@@ -40,18 +46,21 @@ export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
 
   const { data, error } = await supabase
     .from('attendance_records')
-    .select('employee_id, work_date, tardiness_minutes, clock_in')
+    .select('employee_id, work_date, tardiness_minutes, clock_in, clock_out, notes, employees(full_name)')
     .order('work_date', { ascending: false });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  const records: AttendanceRecord[] = (data ?? []).map((item) => ({
+  const records: AttendanceRecord[] = (data ?? []).map((item: any) => ({
     employeeId: item.employee_id,
+    employeeName: item.employees?.full_name,
     workDate: item.work_date,
     tardinessMinutes: item.tardiness_minutes,
     clockIn: item.clock_in,
+    clockOut: item.clock_out,
+    notes: item.notes
   }));
   return buildAttendanceSummary(records);
 }
@@ -200,21 +209,25 @@ export async function getTodayAttendanceByEmployee(employeeId: string, workDate:
   };
 }
 
-export async function updateAttendanceClockOut(id: string, clockOut: string): Promise<void> {
+export async function updateAttendanceClockOut(id: string, clockOut: string, notes?: string): Promise<void> {
   if (!hasSupabaseCredentials()) {
     const database = await loadLocalDatabase();
     const index = database.attendanceRecords.findIndex(r => r.id === id);
     if (index !== -1) {
       database.attendanceRecords[index].clockOut = clockOut;
+      if (notes) database.attendanceRecords[index].notes = notes;
       await saveLocalDatabase(database);
     }
     return;
   }
 
   const supabase = createSupabaseClient();
+  const updateData: any = { clock_out: clockOut };
+  if (notes) updateData.notes = notes;
+  
   const { error } = await supabase
     .from('attendance_records')
-    .update({ clock_out: clockOut })
+    .update(updateData)
     .eq('id', id);
 
   if (error) throw new Error(error.message);

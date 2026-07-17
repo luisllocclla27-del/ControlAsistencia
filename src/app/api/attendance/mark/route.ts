@@ -19,16 +19,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Empleado no encontrado' }, { status: 404 });
     }
 
-    // Fecha actual para el registro
-    const ahora = new Date();
-    // Ajustar a hora local (aproximado usando toISOString y quitando parte de la fecha/hora)
-    const year = ahora.getFullYear();
-    const month = String(ahora.getMonth() + 1).padStart(2, '0');
-    const day = String(ahora.getDate()).padStart(2, '0');
+    // America/Lima es UTC-5
+    const now = new Date();
+    const limaTime = new Date(now.getTime() - 5 * 60 * 60 * 1000);
+    const year = limaTime.getUTCFullYear();
+    const month = String(limaTime.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(limaTime.getUTCDate()).padStart(2, '0');
     const workDate = `${year}-${month}-${day}`;
     
-    const hours = String(ahora.getHours()).padStart(2, '0');
-    const minutes = String(ahora.getMinutes()).padStart(2, '0');
+    const hours = String(limaTime.getUTCHours()).padStart(2, '0');
+    const minutes = String(limaTime.getUTCMinutes()).padStart(2, '0');
     const timeString = `${hours}:${minutes}`;
 
     const existingRecord = await getTodayAttendanceByEmployee(employee.id, workDate);
@@ -56,7 +56,18 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Ya marcaste tu salida el día de hoy' }, { status: 400 });
       }
 
-      await updateAttendanceClockOut(existingRecord.id, timeString);
+      let notes = existingRecord.notes || '';
+      const scheduledEnd = '17:00';
+      const [hOut, mOut] = timeString.split(':').map(Number);
+      const [shOut, smOut] = scheduledEnd.split(':').map(Number);
+      const earlyDiff = (shOut * 60 + smOut) - (hOut * 60 + mOut);
+      
+      if (earlyDiff > 0) {
+        const earlyNote = `Salida anticipada (${earlyDiff} min)`;
+        notes = notes ? `${notes} | ${earlyNote}` : earlyNote;
+      }
+
+      await updateAttendanceClockOut(existingRecord.id, timeString, notes);
       return NextResponse.json({ success: true }, { status: 200 });
     }
 
