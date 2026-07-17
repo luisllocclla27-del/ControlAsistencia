@@ -35,7 +35,18 @@ export default function EmpleadoPortal() {
     setStatus({ message: '', type: null });
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch('/api/attendance/mark', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ employeeCode, type: tipo })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al registrar marcación');
+      }
+
       const ahora = new Date();
       const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       
@@ -43,10 +54,10 @@ export default function EmpleadoPortal() {
         type: 'success',
         message: `¡${tipo === 'entrada' ? 'Entrada' : 'Salida'} registrada correctamente a las ${horaFormateada}!`
       });
-    } catch (error) {
+    } catch (error: any) {
       setStatus({
         type: 'error',
-        message: 'Ocurrió un error al registrar. Inténtalo de nuevo.'
+        message: error.message || 'Ocurrió un error al registrar. Inténtalo de nuevo.'
       });
     } finally {
       setLoading(false);

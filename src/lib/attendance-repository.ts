@@ -160,3 +160,62 @@ function timeToMinutes(time: string): number {
   const [hours, minutes] = time.split(':').map(Number);
   return hours * 60 + minutes;
 }
+
+export async function getTodayAttendanceByEmployee(employeeId: string, workDate: string): Promise<AttendanceEntryRecord | null> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    const record = database.attendanceRecords.find(r => r.employeeId === employeeId && r.workDate === workDate);
+    if (!record) return null;
+    return {
+      id: record.id,
+      employeeId: record.employeeId,
+      workDate: record.workDate,
+      scheduledStart: record.scheduledStart,
+      clockIn: record.clockIn,
+      clockOut: record.clockOut,
+      tardinessMinutes: record.tardinessMinutes,
+      notes: record.notes
+    };
+  }
+
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from('attendance_records')
+    .select('id, employee_id, work_date, clock_in, clock_out, tardiness_minutes, notes')
+    .eq('employee_id', employeeId)
+    .eq('work_date', workDate)
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    id: data.id,
+    employeeId: data.employee_id,
+    workDate: data.work_date,
+    scheduledStart: '08:00',
+    clockIn: data.clock_in,
+    clockOut: data.clock_out,
+    tardinessMinutes: data.tardiness_minutes,
+    notes: data.notes
+  };
+}
+
+export async function updateAttendanceClockOut(id: string, clockOut: string): Promise<void> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    const index = database.attendanceRecords.findIndex(r => r.id === id);
+    if (index !== -1) {
+      database.attendanceRecords[index].clockOut = clockOut;
+      await saveLocalDatabase(database);
+    }
+    return;
+  }
+
+  const supabase = createSupabaseClient();
+  const { error } = await supabase
+    .from('attendance_records')
+    .update({ clock_out: clockOut })
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
+}

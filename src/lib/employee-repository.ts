@@ -76,3 +76,37 @@ export async function createEmployee(input: EmployeeInput): Promise<EmployeeReco
     active: data.active
   };
 }
+
+export async function getEmployeeByCode(employeeCode: string): Promise<EmployeeRecord | null> {
+  if (!hasSupabaseCredentials()) {
+    const database = await loadLocalDatabase();
+    const employee = database.employees.find(e => e.employeeCode.toUpperCase() === employeeCode.toUpperCase());
+    if (!employee) return null;
+    return {
+      id: employee.id,
+      employeeCode: employee.employeeCode,
+      fullName: employee.fullName,
+      email: employee.email,
+      active: employee.active
+    };
+  }
+
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from('employees')
+    .select('id, employee_code, full_name, email, active')
+    .eq('employee_code', employeeCode)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    employeeCode: data.employee_code,
+    fullName: data.full_name,
+    email: data.email,
+    active: data.active
+  };
+}
