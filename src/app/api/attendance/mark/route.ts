@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     
     const result = markAttendanceSchema.safeParse(json);
     if (!result.success) {
-      return NextResponse.json({ error: result.error.errors[0].message }, { status: 400 });
+      return NextResponse.json({ error: result.error.issues[0].message }, { status: 400 });
     }
     
     const body = result.data;
