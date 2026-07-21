@@ -36,31 +36,80 @@ export default function LoginPage() {
         <h1 className="auth-title">AsistControl</h1>
         <p className="auth-subtitle">Ingresa tu código para continuar</p>
 
+        <div style={{ marginBottom: '24px' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '12px' }}>MODO DEMO SEGURO</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            {/* Admin Card */}
+            <div 
+              onClick={() => setCode('admin')}
+              style={{
+                background: code === 'admin' ? 'var(--accent-subtle)' : 'var(--bg-elevated)',
+                border: `1px solid ${code === 'admin' ? 'var(--accent)' : 'var(--border)'}`,
+                padding: '16px',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <div style={{
+                  width: '18px', height: '18px', borderRadius: '50%', border: `5px solid ${code === 'admin' ? 'var(--accent)' : 'var(--border)'}`,
+                  background: code === 'admin' ? '#fff' : 'transparent',
+                  transition: 'all 0.2s ease'
+                }} />
+                <strong style={{ color: code === 'admin' ? 'var(--accent)' : 'var(--text-primary)' }}>Dueño administrador</strong>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Gestión completa, reportes y configuración.
+              </p>
+            </div>
+            
+            {/* Employee Card */}
+            <div 
+              onClick={() => setCode('EMP-001')}
+              style={{
+                background: code === 'EMP-001' ? 'var(--accent-subtle)' : 'var(--bg-elevated)',
+                border: `1px solid ${code === 'EMP-001' ? 'var(--accent)' : 'var(--border)'}`,
+                padding: '16px',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <div style={{
+                  width: '18px', height: '18px', borderRadius: '50%', border: `5px solid ${code === 'EMP-001' ? 'var(--accent)' : 'var(--border)'}`,
+                  background: code === 'EMP-001' ? '#fff' : 'transparent',
+                  transition: 'all 0.2s ease'
+                }} />
+                <strong style={{ color: code === 'EMP-001' ? 'var(--accent)' : 'var(--text-primary)' }}>Empleado (Kiosko)</strong>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Simulación del marcador de asistencia diario.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <form onSubmit={handleLogin} className="auth-form form-grid">
           <div className="form-group">
-            <label className="form-label">Código de Acceso</label>
+            <label className="form-label" style={{ textTransform: 'uppercase', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>USUARIO DEMO</label>
             <input
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="Ej. EMP-001 o 'admin'"
+              placeholder="Selecciona un rol arriba..."
               className="form-input"
               required
             />
           </div>
           
           <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', padding: '14px', fontSize: '1rem', marginTop: '12px' }}>
-            {loading ? 'Cargando...' : 'Ingresar al Sistema'}
+            {loading ? 'Cargando...' : 'Iniciar sesión'}
           </button>
         </form>
-
-        <div className="auth-hint">
-          <strong style={{ color: 'var(--text-primary)' }}>Pistas para la demo:</strong>
-          <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
-            <li>Ingresa <strong>admin</strong> para ir al Dashboard.</li>
-            <li>Ingresa cualquier otro código para el Kiosko.</li>
-          </ul>
-        </div>
       </div>
     </div>
   );
