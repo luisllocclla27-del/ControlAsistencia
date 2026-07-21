@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ResourceList } from './resource-list';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 /* SVG Icons */
 const ClipboardIcon = () => (
@@ -183,6 +184,48 @@ export function ReportSummary() {
 
           {/* Details panels */}
           <div className="content-grid">
+            {/* Visual Charts */}
+            <div className="panel" style={{ gridColumn: '1 / -1' }}>
+              <div className="panel-header">
+                <div>
+                  <h2>Distribución de Asistencias</h2>
+                  <p className="panel-description">Análisis gráfico del desempeño global del equipo</p>
+                </div>
+              </div>
+              <div style={{ height: 320, width: '100%', marginTop: 20 }}>
+                {summary.totalRecords > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={[
+                          { name: 'Puntuales', value: summary.onTimeRecords, color: '#10b981' },
+                          { name: 'Tardanzas', value: summary.lateRecords, color: '#f59e0b' }
+                        ]}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={80}
+                        outerRadius={120}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        <Cell fill="#10b981" />
+                        <Cell fill="#f59e0b" />
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)' }}
+                        itemStyle={{ color: 'var(--text-primary)', fontWeight: 'bold' }}
+                      />
+                      <Legend verticalAlign="bottom" height={36}/>
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="empty-state" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    No hay datos suficientes para generar el gráfico.
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Punctuality rate */}
             <div className="panel">
               <div className="panel-header">

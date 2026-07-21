@@ -1,17 +1,25 @@
 import { NextResponse } from 'next/server';
 import { getEmployeeByCode } from '@/lib/employee-repository';
 import { getTodayAttendanceByEmployee, createAttendanceRecord, updateAttendanceClockOut } from '@/lib/attendance-repository';
+import { z } from 'zod';
+
+const markAttendanceSchema = z.object({
+  employeeCode: z.string().min(1, 'El código de empleado es requerido'),
+  type: z.enum(['entrada', 'salida'], {
+    errorMap: () => ({ message: "El tipo debe ser 'entrada' o 'salida'" })
+  })
+});
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as {
-      employeeCode?: string;
-      type?: 'entrada' | 'salida';
-    };
-
-    if (!body.employeeCode || !body.type) {
-      return NextResponse.json({ error: 'Faltan campos requeridos' }, { status: 400 });
+    const json = await request.json();
+    
+    const result = markAttendanceSchema.safeParse(json);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.errors[0].message }, { status: 400 });
     }
+    
+    const body = result.data;
 
     // Buscar al empleado
     const employee = await getEmployeeByCode(body.employeeCode);
