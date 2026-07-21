@@ -27,6 +27,10 @@ test.describe('Autenticación y Kiosko (E2E QA)', () => {
     // 8. El robot verifica que el sistema devuelva una respuesta (Toast de éxito o advertencia de duplicado)
     await expect(page.locator('.kiosk-status')).toBeVisible();
 
+    // 8.5 El robot hace clic en "Marcar Salida"
+    await page.getByRole('button', { name: /Marcar Salida/i }).click();
+    await expect(page.locator('.kiosk-status')).toBeVisible();
+
     // 9. El robot vuelve al login forzando la recarga para limpiar el estado
     await page.goto('/login');
     await page.waitForLoadState('networkidle');
