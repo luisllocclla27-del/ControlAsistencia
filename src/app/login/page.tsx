@@ -41,55 +41,38 @@ export default function LoginPage() {
             <span style={{ background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '12px' }}>MODO DEMO SEGURO</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            {/* Admin Card */}
-            <div 
-              onClick={() => setCode('admin')}
-              style={{
-                background: code === 'admin' ? 'var(--accent-subtle)' : 'var(--bg-elevated)',
-                border: `1px solid ${code === 'admin' ? 'var(--accent)' : 'var(--border)'}`,
-                padding: '16px',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{
-                  width: '18px', height: '18px', borderRadius: '50%', border: `5px solid ${code === 'admin' ? 'var(--accent)' : 'var(--border)'}`,
-                  background: code === 'admin' ? '#fff' : 'transparent',
+            {[
+              { id: 'admin', label: 'Dueño Admin', desc: 'Gestión total.' },
+              { id: 'EMP-001', label: 'Ana (EMP-001)', desc: 'Kiosko empleado 1.' },
+              { id: 'EMP-002', label: 'Luis (EMP-002)', desc: 'Kiosko empleado 2.' },
+              { id: 'EMP-003', label: 'Carlos (EMP-003)', desc: 'Kiosko empleado 3.' }
+            ].map(demo => (
+              <div 
+                key={demo.id}
+                onClick={() => setCode(demo.id)}
+                style={{
+                  background: code === demo.id ? 'var(--accent-subtle)' : 'var(--bg-elevated)',
+                  border: `1px solid ${code === demo.id ? 'var(--accent)' : 'var(--border)'}`,
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
                   transition: 'all 0.2s ease'
-                }} />
-                <strong style={{ color: code === 'admin' ? 'var(--accent)' : 'var(--text-primary)' }}>Dueño administrador</strong>
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div style={{
+                    width: '16px', height: '16px', borderRadius: '50%', border: `4px solid ${code === demo.id ? 'var(--accent)' : 'var(--border)'}`,
+                    background: code === demo.id ? '#fff' : 'transparent',
+                    transition: 'all 0.2s ease',
+                    flexShrink: 0
+                  }} />
+                  <strong style={{ fontSize: '0.9rem', color: code === demo.id ? 'var(--accent)' : 'var(--text-primary)' }}>{demo.label}</strong>
+                </div>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>
+                  {demo.desc}
+                </p>
               </div>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Gestión completa, reportes y configuración.
-              </p>
-            </div>
-            
-            {/* Employee Card */}
-            <div 
-              onClick={() => setCode('EMP-001')}
-              style={{
-                background: code === 'EMP-001' ? 'var(--accent-subtle)' : 'var(--bg-elevated)',
-                border: `1px solid ${code === 'EMP-001' ? 'var(--accent)' : 'var(--border)'}`,
-                padding: '16px',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{
-                  width: '18px', height: '18px', borderRadius: '50%', border: `5px solid ${code === 'EMP-001' ? 'var(--accent)' : 'var(--border)'}`,
-                  background: code === 'EMP-001' ? '#fff' : 'transparent',
-                  transition: 'all 0.2s ease'
-                }} />
-                <strong style={{ color: code === 'EMP-001' ? 'var(--accent)' : 'var(--text-primary)' }}>Empleado (Kiosko)</strong>
-              </div>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
-                Simulación del marcador de asistencia diario.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
 
