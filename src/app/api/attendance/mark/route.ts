@@ -6,7 +6,7 @@ import { z } from 'zod';
 const markAttendanceSchema = z.object({
   employeeCode: z.string().min(1, 'El código de empleado es requerido'),
   type: z.enum(['entrada', 'salida'], {
-    errorMap: () => ({ message: "El tipo debe ser 'entrada' o 'salida'" })
+    message: "El tipo debe ser 'entrada' o 'salida'"
   })
 });
 
