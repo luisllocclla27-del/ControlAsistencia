@@ -8,12 +8,12 @@ Traduce cada decisión del PRD al lenguaje técnico y define las herramientas a 
 ### Metadatos que debe llevar
 
     ---
-    version: 1.0.0
+    version: 1.1.0
     estado: cerrado
     doc: DOC-2-TRD
     titulo: Technical Requirements Document
     autor: Luis
-    fecha: 2026-07-22
+    fecha: 2026-06-12
     depende-de: DOC-1
     habilita: DOC-3-UI-UX, DOC-5-Backend
     aprobado: true
@@ -23,15 +23,15 @@ Traduce cada decisión del PRD al lenguaje técnico y define las herramientas a 
 
 ### 2.1 Stack Tecnológico Elegido
 
-| Capa | Tecnología | Justificación |
-|---|---|---|
-| Frontend | Next.js 15 (App Router) + React 19 | Arquitectura serverless/edge rápida, ideal para SSR y SEO. |
-| Estilos | Tailwind CSS | Desarrollo rápido de UI basada en utilidad, sin CSS inflado. |
-| Backend | Next.js API Routes | Se elimina la necesidad de un servidor separado para simplificar el despliegue. |
-| Base de Datos | Supabase (PostgreSQL) | Permite backend as a service, Auth fácil y RLS. |
-| Fallback BD | Local JSON (`.data/`) | Permite hacer demostraciones si Supabase no está configurado. |
-| Pruebas | Vitest + Playwright | Aseguramiento de calidad TDD/BDD (11 pruebas). |
-| Despliegue | Vercel | Integración natural con Next.js y GitHub para CI/CD. |
+| Capa          | Tecnología                         | Justificación                                                                   |
+| ------------- | ---------------------------------- | ------------------------------------------------------------------------------- |
+| Frontend      | Next.js 15 (App Router) + React 19 | Arquitectura serverless/edge rápida, ideal para SSR y SEO.                      |
+| Estilos       | Tailwind CSS                       | Desarrollo rápido de UI basada en utilidad, sin CSS inflado.                    |
+| Backend       | Next.js API Routes                 | Se elimina la necesidad de un servidor separado para simplificar el despliegue. |
+| Base de Datos | Supabase (PostgreSQL)              | Permite backend as a service, Auth fácil y RLS.                                 |
+| Fallback BD   | Local JSON (`.data/`)              | Permite hacer demostraciones si Supabase no está configurado.                   |
+| Pruebas       | Vitest + Playwright                | Aseguramiento de calidad TDD/BDD.                                               |
+| Despliegue    | Vercel                             | Integración natural con Next.js y GitHub para CI/CD.                            |
 
 ---
 

@@ -8,12 +8,12 @@ Define el producto desde la perspectiva del usuario y del negocio.
 ### Metadatos que debe llevar
 
     ---
-    version: 1.0.0
+    version: 1.2.0
     estado: cerrado
     doc: DOC-1-PRD
     titulo: Product Requirements Document - Sistema de Asistencia
     autor: Luis
-    fecha: 2026-07-22
+    fecha: 2026-06-05
     depende-de: ninguno
     habilita: DOC-2-TRD
     aprobado: true

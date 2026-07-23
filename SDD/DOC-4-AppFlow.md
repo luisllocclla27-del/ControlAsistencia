@@ -8,12 +8,12 @@ Describe el flujo exacto que el usuario sigue para interactuar con la aplicació
 ### Metadatos que debe llevar
 
     ---
-    version: 1.0.0
+    version: 1.3.0
     estado: cerrado
     doc: DOC-4-AppFlow
     titulo: Application Flow
     autor: Luis
-    fecha: 2026-07-22
+    fecha: 2026-06-22
     depende-de: DOC-3
     habilita: DOC-5-Backend
     aprobado: true

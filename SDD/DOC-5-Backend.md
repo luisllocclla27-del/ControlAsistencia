@@ -8,12 +8,12 @@ Define la estructura de los datos y el contrato de las APIs antes de programarla
 ### Metadatos que debe llevar
 
     ---
-    version: 1.0.0
+    version: 1.1.4
     estado: cerrado
     doc: DOC-5-Backend
     titulo: Backend & Database Spec
     autor: Luis
-    fecha: 2026-07-22
+    fecha: 2026-06-25
     depende-de: DOC-4
     habilita: DOC-6-Plan
     aprobado: true

@@ -8,12 +8,12 @@ Establece cómo se ve y cómo se siente usar la aplicación para empleados y adm
 ### Metadatos que debe llevar
 
     ---
-    version: 1.0.0
+    version: 2.0.1
     estado: cerrado
     doc: DOC-3-UI-UX
     titulo: UI/UX Specification
     autor: Luis
-    fecha: 2026-07-22
+    fecha: 2026-06-18
     depende-de: DOC-1, DOC-2
     habilita: DOC-4-AppFlow
     aprobado: true

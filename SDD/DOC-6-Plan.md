@@ -13,7 +13,7 @@ Define el orden exacto en el que el orquestador y el agente construirán el sist
     doc: DOC-6-Plan
     titulo: Execution Plan (Scrum)
     autor: Luis
-    fecha: 2026-07-22
+    fecha: 2026-06-28
     depende-de: DOC-5
     habilita: DOC-7-Ejecucion
     aprobado: true
