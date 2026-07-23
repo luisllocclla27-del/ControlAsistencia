@@ -1,4 +1,5 @@
 import { buildAttendanceSummary, AttendanceRecord } from '../src/lib/report';
+import { describe, it, expect } from 'vitest';
 
 describe('Funciones de Reporte de Asistencia', () => {
   it('debería calcular correctamente las tardanzas y asistencias puntuales', () => {

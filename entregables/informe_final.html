@@ -188,21 +188,52 @@ Resultado esperado: el sistema muestra un resumen de asistencia por rango de fec
 </ul>
 <!-- Page Break -->
 <div style="page-break-before: always;"></div><h1>Diseno de base de datos</h1>
-<h2>Tablas iniciales</h2>
+<h2>Esquema de Base de Datos</h2>
+<p>El sistema está respaldado por PostgreSQL (Supabase) con las siguientes 4 tablas principales:</p>
+<h3>1. <code>employees</code> (Empleados)</h3>
+<p>Almacena la información del personal.</p>
 <ul>
-<li>roles</li>
-<li>profiles</li>
-<li>employees</li>
-<li>shifts</li>
-<li>attendance_records</li>
-<li>audit_logs</li>
+<li><code>id</code> (uuid, PK)</li>
+<li><code>employee_code</code> (text, único)</li>
+<li><code>full_name</code> (text)</li>
+<li><code>email</code> (text)</li>
+<li><code>active</code> (bool)</li>
+<li><code>created_at</code> (timestamptz)</li>
 </ul>
-<h2>Relaciones principales</h2>
+<h3>2. <code>attendance_records</code> (Registros de Asistencia)</h3>
+<p>Almacena el registro diario de cada empleado.</p>
 <ul>
-<li>Un rol puede tener muchos perfiles.</li>
-<li>Un perfil puede estar asociado a un empleado.</li>
-<li>Un empleado puede tener muchos registros de asistencia.</li>
-<li>Un turno puede asociarse a varios registros de asistencia.</li>
+<li><code>id</code> (uuid, PK)</li>
+<li><code>employee_id</code> (uuid, FK -&gt; employees.id)</li>
+<li><code>work_date</code> (text)</li>
+<li><code>clock_in</code> (text)</li>
+<li><code>clock_out</code> (text, opcional)</li>
+<li><code>tardiness_minutes</code> (int4)</li>
+<li><code>notes</code> (text, opcional)</li>
+<li><code>shift_id</code> (text, FK -&gt; shifts.id)</li>
+<li><code>created_at</code> (timestamptz)</li>
+</ul>
+<h3>3. <code>shifts</code> (Turnos)</h3>
+<p>Define los horarios laborales aplicables.</p>
+<ul>
+<li><code>id</code> (text, PK)</li>
+<li><code>name</code> (text)</li>
+<li><code>start_time</code> (text)</li>
+<li><code>end_time</code> (text)</li>
+<li><code>tolerance_minutes</code> (int4)</li>
+<li><code>created_at</code> (timestamptz)</li>
+</ul>
+<h3>4. <code>roles</code> (Roles)</h3>
+<p>Define los roles del sistema para el acceso (ej. Admin, Supervisor).</p>
+<ul>
+<li><code>id</code> (text, PK)</li>
+<li><code>name</code> (text)</li>
+<li><code>created_at</code> (timestamptz)</li>
+</ul>
+<h2>Relaciones Principales</h2>
+<ul>
+<li><strong>Un Empleado (<code>employees</code>)</strong> tiene muchos <strong>Registros de Asistencia (<code>attendance_records</code>)</strong>. (Relación 1:N a través de <code>employee_id</code>).</li>
+<li><strong>Un Turno (<code>shifts</code>)</strong> puede estar asociado a múltiples <strong>Registros de Asistencia (<code>attendance_records</code>)</strong>. (Relación 1:N a través de <code>shift_id</code>).</li>
 </ul>
 <h2>Reglas de negocio</h2>
 <ul>
@@ -538,6 +569,58 @@ Resultado esperado: el sistema muestra un resumen de asistencia por rango de fec
 <li>Defensa oral</li>
 <li>Anexos</li>
 </ol>
+<!-- Page Break -->
+<div style="page-break-before: always;"></div><h1>Software Design Document (SDD) &amp; Specifications</h1>
+<p><strong>Proyecto:</strong> Sistema de Asistencia de Empleados (AsistControl)
+<strong>Versión:</strong> 1.0.0</p>
+<h2>1. Introducción</h2>
+<p>El presente documento (SDD) centraliza las especificaciones funcionales, técnicas y de arquitectura del proyecto AsistControl. Actúa como la fuente única de verdad (Single Source of Truth) para el desarrollo guiado por especificaciones (Specification-Driven Development).</p>
+<h2>2. Arquitectura del Sistema</h2>
+<p>El sistema sigue un modelo cliente-servidor desacoplado (Single Page Application):</p>
+<ul>
+<li><strong>Frontend (Capa de Presentación):</strong> Next.js (React) + Tailwind CSS.</li>
+<li><strong>Backend (Capa de Negocio y Datos):</strong> Next.js API Routes (Node.js).</li>
+<li><strong>Validación de Especificaciones (Spec Kit):</strong> Zod (Schema Validation).</li>
+</ul>
+<h2>3. Especificaciones de Funcionalidades (Specs)</h2>
+<h3>Spec 01: Módulo de Kiosko (Marcación)</h3>
+<p><strong>Actor:</strong> Empleado
+<strong>Instrucción / Comportamiento Esperado:</strong></p>
+<ol>
+<li>El empleado ingresa al kiosko y visualiza la hora en tiempo real.</li>
+<li>El empleado presiona &quot;Marcar Entrada&quot; o &quot;Marcar Salida&quot;.</li>
+<li><strong>Condición de fallo (Negative Path):</strong> Si el empleado ya registró una entrada en la fecha actual, el sistema debe bloquear una segunda entrada y mostrar una alerta roja.</li>
+<li><strong>Condición de éxito (Happy Path):</strong> Si la marcación es válida, el sistema muestra una alerta verde y persiste el registro en el archivo/base de datos.</li>
+</ol>
+<h3>Spec 02: Módulo de Autenticación</h3>
+<p><strong>Actor:</strong> Administrador / Empleado
+<strong>Instrucción / Comportamiento Esperado:</strong></p>
+<ol>
+<li>El usuario selecciona su cuenta o ingresa sus credenciales.</li>
+<li>Si el rol es <code>admin</code>, el sistema lo redirige a la ruta <code>/admin</code> tras validar el inicio de sesión.</li>
+<li>Si el rol es <code>empleado</code>, el sistema lo redirige a <code>/empleado</code> (Kiosko).</li>
+</ol>
+<h3>Spec 03: Panel de Reportes (Dashboard)</h3>
+<p><strong>Actor:</strong> Administrador (Dueño)
+<strong>Instrucción / Comportamiento Esperado:</strong></p>
+<ol>
+<li>El administrador visualiza tarjetas con métricas resumidas (Total empleados, Asistencias de hoy, Tardanzas).</li>
+<li>El administrador tiene acceso a una tabla con el registro detallado de las horas de llegada.</li>
+<li>Se calcula automáticamente si un empleado llegó &quot;A tiempo&quot; o &quot;Tarde&quot; basado en la hora límite (09:00 AM).</li>
+</ol>
+<h2>4. Contrato de la API (Open Spec)</h2>
+<p>Las rutas del servidor respetan el siguiente contrato de datos:</p>
+<ul>
+<li><strong>Ruta:</strong> <code>POST /api/attendance/mark</code></li>
+<li><strong>Cuerpo de la petición (Input):</strong> <code>{ &quot;employeeCode&quot;: &quot;string&quot;, &quot;type&quot;: &quot;entrada&quot; | &quot;salida&quot; }</code></li>
+<li><strong>Respuesta Exitosa:</strong> <code>200 OK</code> con <code>{ &quot;message&quot;: &quot;...&quot; }</code></li>
+<li><strong>Respuesta de Error:</strong> <code>400 Bad Request</code> con <code>{ &quot;error&quot;: &quot;...&quot; }</code></li>
+</ul>
+<h2>5. Pruebas y Validación (QA)</h2>
+<ul>
+<li><strong>Pruebas Unitarias (Jest):</strong> Verifican matemáticamente las especificaciones de cálculo de tardanzas.</li>
+<li><strong>Pruebas E2E (Playwright):</strong> Robot automatizado que lee este documento de especificaciones y verifica paso a paso que la interfaz gráfica cumpla con los comportamientos descritos en el <em>Spec 01</em> y <em>Spec 02</em>.</li>
+</ul>
 <!-- Page Break -->
 <div style="page-break-before: always;"></div><h1>Anexos</h1>
 <ul>

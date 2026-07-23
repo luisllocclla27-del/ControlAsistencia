@@ -1,0 +1,79 @@
+openapi: 3.0.3
+info:
+  title: AsistControl API - Sistema de Asistencia de Empleados
+  description: |
+    Documentación de la API bajo el enfoque SDD (Specification-Driven Development).
+    Esta especificación define los contratos exactos (endpoints, inputs y outputs) 
+    antes de la implementación del código fuente, sirviendo como única fuente de verdad.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor de Desarrollo Local
+  - url: https://proyecto-asistencia-empleados.vercel.app/api
+    description: Servidor de Producción (Vercel)
+
+paths:
+  /attendance/mark:
+    post:
+      summary: Registrar entrada o salida
+      description: Permite a un empleado registrar su marcación diaria en el Kiosko.
+      tags:
+        - Kiosko de Asistencia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - employeeCode
+                - type
+              properties:
+                employeeCode:
+                  type: string
+                  example: "EMP-001"
+                  description: "Código único del empleado"
+                type:
+                  type: string
+                  enum: [entrada, salida]
+                  example: "entrada"
+      responses:
+        '200':
+          description: Marcación registrada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Marcación registrada"
+        '400':
+          description: Error de validación o lógica de negocio (ej. ya marcó entrada)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Ya has registrado tu entrada el día de hoy"
+
+components:
+  schemas:
+    AttendanceRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        employeeId:
+          type: string
+        date:
+          type: string
+          format: date
+        checkIn:
+          type: string
+          format: date-time
+        checkOut:
+          type: string
+          format: date-time
